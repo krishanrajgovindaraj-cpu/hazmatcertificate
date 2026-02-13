@@ -2,7 +2,8 @@
 <html>
 <head>
   <title>OZELLAR MARINE - ESE Certificate Generator</title>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
     body {
@@ -92,8 +93,23 @@
 <h1 style="color:#ED7C31;">ENCLOSED SPACE ENTRY TRAINING</h1>
 
 <div class="form-container">
-  <button type="button" onclick="exportToExcel()">Export All Records to Excel</button>
 <p><strong>Total Certificates Generated:</strong> <span id="certCount">0</span></p>
+
+<h2>Generated Certificates</h2>
+<table border="1" width="100%" cellpadding="5" style="border-collapse:collapse;">
+  <thead style="background:#f2f2f2;">
+    <tr>
+      <th>Cert No</th>
+      <th>Name</th>
+      <th>PP No</th>
+      <th>Issue Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="certificateTable"></tbody>
+</table>
+
+<button onclick="exportToExcel()">Export All Records to Excel</button>
 
   <label>Certificate No</label><input id="certNo">
   <label>Candidate Name</label><input id="name">
@@ -163,13 +179,16 @@
 </div>
 <script>
 
-// Store records locally
+// ================= STORE RECORDS =================
 let certificateRecords = JSON.parse(localStorage.getItem("certRecords")) || [];
 
-// Update counter on load
-updateCertCount();
+// ================= ON LOAD =================
+document.addEventListener("DOMContentLoaded", function () {
+  updateCertCount();
+  renderCertificateList();
+});
 
-// ---------------- Generate Certificate ----------------
+// ================= GENERATE CERTIFICATE =================
 function generateCertificate() {
 
   const certNo = document.getElementById("certNo").value;
@@ -186,7 +205,7 @@ function generateCertificate() {
 
   const issueDate = issueDateInput || new Date().toLocaleDateString("en-GB");
 
-  // Show in certificate
+  // Show certificate preview
   document.getElementById("outCertNo").textContent = certNo;
   document.getElementById("outName").textContent = name;
   document.getElementById("outPPNo").textContent = ppNo;
@@ -195,8 +214,8 @@ function generateCertificate() {
   document.getElementById("outIssueDate").textContent = issueDate;
 
   document.getElementById("certificate").style.display = "block";
+  document.getElementById("downloadBtn").style.display = "inline-block";
 
-  // Save record
   const record = {
     certNo,
     name,
@@ -210,13 +229,14 @@ function generateCertificate() {
   localStorage.setItem("certRecords", JSON.stringify(certificateRecords));
 
   updateCertCount();
+  renderCertificateList();
 }
 
-// ---------------- Download PDF ----------------
+// ================= DOWNLOAD PDF =================
 function downloadPDF() {
 
   const element = document.getElementById("certificate");
-  const candidateName = document.getElementById("name").value || "Certificate";
+  const candidateName = document.getElementById("outName").textContent || "Certificate";
 
   const opt = {
     margin: 0,
@@ -229,7 +249,7 @@ function downloadPDF() {
   html2pdf().set(opt).from(element).save();
 }
 
-// ---------------- Export ALL Records to Excel ----------------
+// ================= EXPORT TO EXCEL =================
 function exportToExcel() {
 
   if (certificateRecords.length === 0) {
@@ -237,19 +257,86 @@ function exportToExcel() {
     return;
   }
 
-  const ws = XLSX.utils.json_to_sheet(certificateRecords);
+  const formattedData = certificateRecords.map(record => ({
+    "Certificate No": record.certNo,
+    "Candidate Name": record.name,
+    "PP No": record.ppNo,
+    "Conducted Date": record.conductedDate,
+    "Conducted At": record.conductedAt,
+    "Issue Date": record.issueDate
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(formattedData);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Certificates");
 
   XLSX.writeFile(wb, "OZELLAR_MARINE_Certificates.xlsx");
 }
 
-// ---------------- Update Counter ----------------
+// ================= UPDATE COUNTER =================
 function updateCertCount() {
-  document.getElementById("certCount").textContent = certificateRecords.length;
+  const counter = document.getElementById("certCount");
+  if (counter) {
+    counter.textContent = certificateRecords.length;
+  }
 }
 
-// ---------------- Image Upload ----------------
+// ================= RENDER TABLE =================
+function renderCertificateList() {
+
+  const table = document.getElementById("certificateTable");
+  if (!table) return;
+
+  table.innerHTML = "";
+
+  certificateRecords.forEach((record, index) => {
+
+    const row = `
+      <tr>
+        <td>${record.certNo}</td>
+        <td>${record.name}</td>
+        <td>${record.ppNo}</td>
+        <td>${record.issueDate}</td>
+        <td>
+          <button onclick="viewCertificate(${index})">View</button>
+          <button onclick="deleteCertificate(${index})" style="background:red;color:white;">Delete</button>
+        </td>
+      </tr>
+    `;
+
+    table.innerHTML += row;
+  });
+}
+
+// ================= VIEW CERTIFICATE =================
+function viewCertificate(index) {
+
+  const record = certificateRecords[index];
+
+  document.getElementById("outCertNo").textContent = record.certNo;
+  document.getElementById("outName").textContent = record.name;
+  document.getElementById("outPPNo").textContent = record.ppNo;
+  document.getElementById("outConductedDate").textContent = record.conductedDate;
+  document.getElementById("outConductedAt").textContent = record.conductedAt;
+  document.getElementById("outIssueDate").textContent = record.issueDate;
+
+  document.getElementById("certificate").style.display = "block";
+  document.getElementById("downloadBtn").style.display = "inline-block";
+}
+
+// ================= DELETE CERTIFICATE =================
+function deleteCertificate(index) {
+
+  if (!confirm("Are you sure you want to delete this certificate?")) return;
+
+  certificateRecords.splice(index, 1);
+  localStorage.setItem("certRecords", JSON.stringify(certificateRecords));
+
+  updateCertCount();
+  renderCertificateList();
+}
+
+// ================= IMAGE UPLOAD =================
 document.getElementById("logoUpload").onchange = function(e) {
   const reader = new FileReader();
   reader.onload = () => {
@@ -279,32 +366,8 @@ document.getElementById("photoUpload").onchange = function(e) {
   };
   reader.readAsDataURL(e.target.files[0]);
 };
-function exportToExcel() {
-
-  if (certificateRecords.length === 0) {
-    alert("No records available to export.");
-    return;
-  }
-
-  // Format headers properly
-  const formattedData = certificateRecords.map(record => ({
-    "Certificate No": record.certNo,
-    "Candidate Name": record.name,
-    "PP No": record.ppNo,
-    "Conducted Date": record.conductedDate,
-    "Conducted At": record.conductedAt,
-    "Issue Date": record.issueDate
-  }));
-
-  const ws = XLSX.utils.json_to_sheet(formattedData);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Certificates");
-
-  XLSX.writeFile(wb, "OZELLAR_MARINE_Certificates.xlsx");
-}
 
 </script>
-
 
 </body>
 </html>
