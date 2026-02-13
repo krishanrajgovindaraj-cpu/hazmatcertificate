@@ -3,8 +3,6 @@
 <head>
   <title>OZELLAR MARINE - ESE Certificate Generator</title>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
   <style>
     body {
       font-family: Calibri, sans-serif;
@@ -38,7 +36,7 @@
       width: 744px;
       height: 1073px;
       padding: 15mm;
-      border: 2px solid #000;
+      border: 2px solid #720000;
       background: white;
       margin: auto;
       display: none;
@@ -83,18 +81,39 @@
 
     @page {
       size: A4 portrait;
-      margin: 0;
+      margin: 1;
     }
   </style>
 </head>
 
 <body>
 
-<h1 style="color:#ED7C31;">ENCLOSED SPACE ENTRY TRAINING1</h1>
+<h1 style="color:#ED7C31;">ENCLOSED SPACE ENTRY TRAINING</h1>
 
 <div class="form-container">
-  <button type="button" onclick="exportToExcel()">Export All Records to Excel</button>
-<p><strong>Total Certificates Generated:</strong> <span id="certCount">0</span></p>
+<h2>
+  Generated Certificates
+  <button type="button" onclick="toggleCertificates()" 
+          style="margin-left:10px;background:#e3b00a;">
+    Show / Hide
+  </button>
+</h2>
+
+<div id="certificateSection">
+<table border="1" width="100%" cellpadding="5" style="border-collapse:collapse;">
+  <thead style="background:#f2f2f2;">
+    <tr>
+      <th>Cert No</th>
+      <th>Name</th>
+      <th>PP No</th>
+      <th>Issue Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="certificateTable"></tbody>
+</table>
+</div>
+<button onclick="exportToExcel()">Export All Records to Excel</button>
 
   <label>Certificate No</label><input id="certNo">
   <label>Candidate Name</label><input id="name">
@@ -231,7 +250,16 @@ function downloadPDF() {
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
   };
 
-  html2pdf().set(opt).from(element).save();
+  html2pdf()
+  .set(opt)
+  .from(element)
+  .toPdf()
+  .get('pdf')
+  .then(function (pdf) {
+    const blob = pdf.output('blob');
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  });
 }
 
 // ================= EXPORT TO EXCEL =================
@@ -283,8 +311,7 @@ function renderCertificateList() {
         <td>${record.ppNo}</td>
         <td>${record.issueDate}</td>
         <td>
-          <button onclick="viewCertificate(${index})">View</button>
-          <button onclick="deleteCertificate(${index})" style="background:red;color:white;">Delete</button>
+<button onclick="viewPDFfromRecord(${index})">View PDF</button>          <button onclick="deleteCertificate(${index})" style="background:red;color:white;">Delete</button>
         </td>
       </tr>
     `;
@@ -351,7 +378,73 @@ document.getElementById("photoUpload").onchange = function(e) {
   };
   reader.readAsDataURL(e.target.files[0]);
 };
+function viewPDF() {
 
+  const element = document.getElementById("certificate");
+
+  const opt = {
+    margin: 0,
+    image: { type: "jpeg", quality: 1 },
+    html2canvas: { scale: 3 },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  };
+
+  html2pdf()
+    .set(opt)
+    .from(element)
+    .toPdf()
+    .get('pdf')
+    .then(function (pdf) {
+
+      const blob = pdf.output('blob');
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+
+    });
+}
+function viewPDFfromRecord(index) {
+
+  const record = certificateRecords[index];
+
+  // Fill certificate
+  document.getElementById("outCertNo").textContent = record.certNo;
+  document.getElementById("outName").textContent = record.name;
+  document.getElementById("outPPNo").textContent = record.ppNo;
+  document.getElementById("outConductedDate").textContent = record.conductedDate;
+  document.getElementById("outConductedAt").textContent = record.conductedAt;
+  document.getElementById("outIssueDate").textContent = record.issueDate;
+
+  document.getElementById("certificate").style.display = "block";
+
+  const element = document.getElementById("certificate");
+
+  const opt = {
+    margin: 0,
+    image: { type: "jpeg", quality: 1 },
+    html2canvas: { scale: 3 },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  };
+
+  html2pdf()
+    .set(opt)
+    .from(element)
+    .toPdf()
+    .get('pdf')
+    .then(function (pdf) {
+      const blob = pdf.output('blob');
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    });
+}
+function toggleCertificates() {
+  const section = document.getElementById("certificateSection");
+
+  if (section.style.display === "none") {
+    section.style.display = "block";
+  } else {
+    section.style.display = "none";
+  }
+}
 </script>
 
 </body>
