@@ -90,26 +90,11 @@
 
 <body>
 
-<h1 style="color:#ED7C31;">ENCLOSED SPACE ENTRY TRAINING</h1>
+<h1 style="color:#ED7C31;">ENCLOSED SPACE ENTRY TRAINING1</h1>
 
 <div class="form-container">
+  <button type="button" onclick="exportToExcel()">Export All Records to Excel</button>
 <p><strong>Total Certificates Generated:</strong> <span id="certCount">0</span></p>
-
-<h2>Generated Certificates</h2>
-<table border="1" width="100%" cellpadding="5" style="border-collapse:collapse;">
-  <thead style="background:#f2f2f2;">
-    <tr>
-      <th>Cert No</th>
-      <th>Name</th>
-      <th>PP No</th>
-      <th>Issue Date</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody id="certificateTable"></tbody>
-</table>
-
-<button onclick="exportToExcel()">Export All Records to Excel</button>
 
   <label>Certificate No</label><input id="certNo">
   <label>Candidate Name</label><input id="name">
