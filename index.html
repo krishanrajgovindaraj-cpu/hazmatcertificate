@@ -158,12 +158,15 @@
   <img id="signatureImage">
 
 </div>
-
 <script>
 
-const SHEET_URL = "https://ozellarmarine-my.sharepoint.com/:f:/g/personal/krishanraj_g_ozellar_com/IgDjuBQOh3N8TozB1Jm0h361AXUCADdPx_uwUcuZhE39xRg?e=NfqwQS";
+// Store records locally
+let certificateRecords = JSON.parse(localStorage.getItem("certRecords")) || [];
 
-// -------------------- Generate Certificate --------------------
+// Update counter on load
+updateCertCount();
+
+// ---------------- Generate Certificate ----------------
 function generateCertificate() {
 
   const certNo = document.getElementById("certNo").value;
@@ -178,44 +181,37 @@ function generateCertificate() {
     return;
   }
 
-  // Show data on certificate
+  const issueDate = issueDateInput || new Date().toLocaleDateString("en-GB");
+
+  // Show in certificate
   document.getElementById("outCertNo").textContent = certNo;
   document.getElementById("outName").textContent = name;
   document.getElementById("outPPNo").textContent = ppNo;
   document.getElementById("outConductedDate").textContent = conductedDate;
   document.getElementById("outConductedAt").textContent = conductedAt;
-  document.getElementById("outIssueDate").textContent =
-      issueDateInput || new Date().toLocaleDateString("en-GB");
+  document.getElementById("outIssueDate").textContent = issueDate;
 
   document.getElementById("certificate").style.display = "block";
-  document.getElementById("downloadBtn").style.display = "inline-block";
 
-  // Send data to Google Sheet
-  fetch(SHEET_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      certNo: certNo,
-      name: name,
-      ppNo: ppNo,
-      conductedDate: conductedDate,
-      conductedAt: conductedAt,
-      issueDate: document.getElementById("outIssueDate").textContent,
-      // Add extra fields if needed
-      additionalField1: "Extra data 1",
-      additionalField2: "Extra data 2"
-    })
-  })
-  .then(res => res.json())
-  .then(() => {
-    console.log("Data sent to Google Sheet");
-    updateCertCount(); // refresh certificate count
-  })
-  .catch(err => console.error(err));
+  // Save record
+  const record = {
+    certNo,
+    name,
+    ppNo,
+    conductedDate,
+    conductedAt,
+    issueDate
+  };
+
+  certificateRecords.push(record);
+  localStorage.setItem("certRecords", JSON.stringify(certificateRecords));
+
+  updateCertCount();
 }
 
-// -------------------- Download PDF --------------------
+// ---------------- Download PDF ----------------
 function downloadPDF() {
+
   const element = document.getElementById("certificate");
   const candidateName = document.getElementById("name").value || "Certificate";
 
@@ -223,14 +219,34 @@ function downloadPDF() {
     margin: 0,
     filename: candidateName + "_Certificate.pdf",
     image: { type: "jpeg", quality: 1 },
-    html2canvas: { scale: 3, useCORS: true, scrollY: 0 },
+    html2canvas: { scale: 3 },
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
   };
 
   html2pdf().set(opt).from(element).save();
 }
 
-// -------------------- Image Upload Handlers --------------------
+// ---------------- Export ALL Records to Excel ----------------
+function exportToExcel() {
+
+  if (certificateRecords.length === 0) {
+    alert("No records available to export.");
+    return;
+  }
+
+  const ws = XLSX.utils.json_to_sheet(certificateRecords);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Certificates");
+
+  XLSX.writeFile(wb, "OZELLAR_MARINE_Certificates.xlsx");
+}
+
+// ---------------- Update Counter ----------------
+function updateCertCount() {
+  document.getElementById("certCount").textContent = certificateRecords.length;
+}
+
+// ---------------- Image Upload ----------------
 document.getElementById("logoUpload").onchange = function(e) {
   const reader = new FileReader();
   reader.onload = () => {
@@ -260,27 +276,6 @@ document.getElementById("photoUpload").onchange = function(e) {
   };
   reader.readAsDataURL(e.target.files[0]);
 };
-
-// -------------------- Certificate Count --------------------
-function updateCertCount() {
-  fetch(SHEET_URL)
-    .then(res => res.json())
-    .then(data => {
-      let counterEl = document.getElementById("certCount");
-      if (!counterEl) {
-        // Create element if not exists
-        const p = document.createElement("p");
-        p.innerHTML = `Certificates Issued: <span id="certCount">${data.count || 0}</span>`;
-        document.querySelector(".form-container").prepend(p);
-      } else {
-        counterEl.textContent = data.count || 0;
-      }
-    })
-    .catch(err => console.error("Error fetching certificate count:", err));
-}
-
-// Call once on page load
-updateCertCount();
 
 </script>
 
