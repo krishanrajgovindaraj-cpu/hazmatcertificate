@@ -37,13 +37,14 @@
     .certificate {
       width: 744px;
       height: 1073px;
-      margin: auto;
-      padding: 20px;
+      padding: 15mm;
       border: 2px solid #000;
-      box-sizing: border-box;
-      background: #fff;
-      position: relative;
+      background: white;
+      margin: auto;
       display: none;
+      position: relative;
+      box-sizing: border-box;
+      page-break-after: always;
     }
 
     #companyLogo {
@@ -365,17 +366,7 @@ document.getElementById("photoUpload").onchange = function(e) {
   };
   reader.readAsDataURL(e.target.files[0]);
 };
-/* PDF */
-	function downloadPDF(){
-	  entryForm.style.display="none";
-	  setTimeout(()=>{
-		html2pdf().from(certificate).set({
-		  filename: candidateName.value+"_Certificate.pdf",
-		  html2canvas:{scale:2},
-		  jsPDF:{format:"a4"}
-		}).save().then(()=>entryForm.style.display="block");
-	  },800);
-	}
+
 </script>
 
 </body>
