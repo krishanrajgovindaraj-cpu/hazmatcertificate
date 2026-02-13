@@ -20,12 +20,12 @@
       color: #333;
     }
 
-    /* Form Styling */
+    /* --- FORM STYLING --- */
     .form-container {
-      max-width: 800px;
+      max-width: 850px;
       margin: 0 auto 40px auto;
       background: white;
-      padding: 30px;
+      padding: 25px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
@@ -36,14 +36,14 @@
       gap: 15px;
     }
 
-    label { font-weight: bold; font-size: 14px; color: #555; margin-top: 10px; display: block; }
-    input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    label { font-weight: bold; font-size: 13px; color: #555; margin-top: 8px; display: block; }
+    input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
 
-    .btn-group { margin-top: 25px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-group { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
     button {
-      padding: 12px 20px;
+      padding: 10px 18px;
       border: none;
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
       font-weight: bold;
       transition: 0.2s;
@@ -55,154 +55,153 @@
     .btn-hide { background: #e3b00a; color: white; }
     button:hover { opacity: 0.8; }
 
-    /* --- CERTIFICATE STYLING (The Professional Look) --- */
+    /* --- CERTIFICATE STYLING (A4 PDF Layout) --- */
     #certificate {
       width: 210mm;
       height: 297mm;
       background: white;
       margin: 20px auto;
-      padding: 15mm;
+      padding: 10mm;
       box-sizing: border-box;
       position: relative;
       display: none; /* Hidden until generated */
       color: #000;
-      line-height: 1.5;
     }
 
-    /* The Red Border Frame */
+    /* The Red Border Frame - Uses Flex to prevent collisions */
     .cert-border {
-      border: 3px solid var(--ozellar-red);
+      border: 2px solid var(--ozellar-red);
       height: 100%;
       width: 100%;
-      padding: 15mm;
+      padding: 12mm;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
       position: relative;
     }
 
     #companyLogo {
       position: absolute;
-      top: 10mm;
-      right: 10mm;
-      max-width: 45mm;
-      max-height: 25mm;
+      top: 8mm;
+      right: 8mm;
+      max-width: 40mm;
+      max-height: 20mm;
     }
 
     .header-section { text-align: center; margin-top: 10mm; }
-    .company-name { color: var(--ozellar-orange); font-size: 26pt; font-weight: bold; margin: 0; }
-    .company-address { font-size: 11pt; margin-top: 5px; color: #444; }
+    .company-name { color: var(--ozellar-orange); font-size: 24pt; font-weight: bold; margin: 0; line-height: 1.2; }
+    .company-address { font-size: 10pt; margin-top: 5px; color: #444; }
 
-    .cert-no-box { text-align: right; margin-top: 15mm; font-size: 14pt; font-weight: bold; }
+    .cert-no-box { text-align: right; margin-top: 12mm; font-size: 13pt; font-weight: bold; }
     
-    .main-content { margin-top: 20mm; font-size: 14pt; }
+    .main-content { margin-top: 15mm; font-size: 14pt; line-height: 1.8; }
     .training-title { 
         text-align: center; 
-        font-size: 22pt; 
+        font-size: 20pt; 
         font-weight: bold; 
-        margin: 25mm 0; 
-        text-decoration: none;
+        margin: 15mm 0;
     }
 
-    .info-row { margin-bottom: 15px; }
     .underline-text {
       border-bottom: 1.5px solid #000;
       display: inline-block;
-      padding: 0 10px;
-      min-width: 150px;
+      padding: 0 8px;
+      min-width: 120px;
       text-align: center;
       font-weight: bold;
     }
 
-    .topics-section { margin-top: 15mm; }
-    .topics-section h3 { font-size: 14pt; margin-bottom: 10px; }
-    .topics-list { font-size: 12pt; padding-left: 20px; line-height: 1.8; }
+    .topics-section { margin-top: 10mm; flex-grow: 1; }
+    .topics-section h3 { font-size: 13pt; margin-bottom: 8px; }
+    .topics-list { font-size: 11.5pt; padding-left: 20px; line-height: 1.7; margin: 0; }
 
-    /* Bottom Section */
+    /* Footer Section - Flex ensures no collision */
     .footer-section {
-      position: absolute;
-      bottom: 20mm;
-      left: 15mm;
-      right: 15mm;
+      margin-top: 20mm;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
+      padding-bottom: 5mm;
     }
 
-    .issue-date-box { font-size: 13pt; }
-    .signature-box { text-align: center; width: 60mm; }
-    .sig-line { border-top: 1px solid #000; padding-top: 5px; font-size: 12pt; }
+    .issue-date-box { font-size: 12pt; }
+    .signature-box { text-align: center; width: 65mm; }
+    .sig-line { border-top: 1px solid #000; padding-top: 5px; font-size: 11pt; margin-top: 5px; }
 
     #candidatePhoto {
       position: absolute;
-      bottom: 60mm;
-      left: 15mm;
-      width: 35mm;
-      height: 45mm;
+      bottom: 45mm;
+      left: 12mm;
+      width: 32mm;
+      height: 40mm;
       border: 1px solid #000;
       object-fit: cover;
+      background: #eee;
     }
 
     #signatureImage {
-      width: 50mm;
-      margin-bottom: -10px;
+      max-width: 50mm;
+      max-height: 15mm;
+      margin-bottom: -5px;
     }
 
     /* Table Styles */
     #certificateSection { margin-top: 20px; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; }
-    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    table { width: 100%; border-collapse: collapse; background: white; font-size: 13px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
     th { background: #f8f9fa; }
 
     @media print {
-      body { margin: 0; background: none; }
-      .form-container, h1, a { display: none; }
-      #certificate { display: block !important; margin: 0; border: none; }
+      body { margin: 0; }
+      .form-container, h1 { display: none; }
+      #certificate { display: block !important; margin: 0; }
     }
   </style>
 </head>
 <body>
 
 <div class="form-container">
-  <h1 style="color:var(--ozellar-orange); margin-top:0;">ESE Certificate Generator</h1>
+  <h2 style="color:var(--ozellar-orange); margin-top:0;">ESE Certificate Generator</h2>
   
   <div class="form-grid">
     <div>
-      <label>Certificate No</label><input id="certNo" placeholder="e.g. OMPL/2023/001">
+      <label>Certificate No</label><input id="certNo" placeholder="OMPL/ESE/2024/001">
       <label>Candidate Name</label><input id="name" placeholder="Full Name">
       <label>Passport (PP) No</label><input id="ppNo" placeholder="Passport Number">
     </div>
     <div>
-      <label>Conducted Date</label><input id="conductedDate" type="text" placeholder="e.g. 25th Oct 2023">
-      <label>Conducted At</label><input id="conductedAt" placeholder="e.g. Chennai Office">
+      <label>Conducted Date</label><input id="conductedDate" placeholder="e.g. 15th Jan 2024">
+      <label>Conducted At</label><input id="conductedAt" placeholder="Location Name">
       <label>Issue Date</label><input id="issueDate" type="date">
     </div>
   </div>
 
   <div class="form-grid" style="margin-top:15px;">
     <div>
-      <label>Company Logo</label><input type="file" id="logoUpload" accept="image/*">
-      <label>Candidate Photo</label><input type="file" id="photoUpload" accept="image/*">
+      <label>Upload Company Logo</label><input type="file" id="logoUpload" accept="image/*">
+      <label>Upload Candidate Photo</label><input type="file" id="photoUpload" accept="image/*">
     </div>
     <div>
-      <label>Incharge Signature</label><input type="file" id="signatureUpload" accept="image/*">
+      <label>Upload Incharge Signature</label><input type="file" id="signatureUpload" accept="image/*">
     </div>
   </div>
 
   <div class="btn-group">
-    <button type="button" class="btn-generate" onclick="generateCertificate()">Generate Preview</button>
-    <button type="button" id="downloadBtn" class="btn-download" style="display:none;" onclick="downloadPDF()">Download Professional PDF</button>
-    <button class="btn-excel" onclick="exportToExcel()">Export Excel</button>
-    <button class="btn-hide" onclick="toggleCertificates()">Show/Hide Records</button>
+    <button type="button" class="btn-generate" onclick="generateCertificate()">Generate Certificate</button>
+    <button type="button" id="downloadBtn" class="btn-download" style="display:none;" onclick="downloadPDF()">Download PDF</button>
+    <button class="btn-excel" onclick="exportToExcel()">Export All to Excel</button>
+    <button class="btn-hide" onclick="toggleCertificates()">Show / Hide Records</button>
   </div>
 
   <div id="certificateSection" style="display:none;">
-    <h3>Generated Records</h3>
-    <table border="1">
+    <h3 style="margin-top:20px;">Saved Records</h3>
+    <table>
       <thead>
         <tr>
           <th>Cert No</th>
           <th>Name</th>
           <th>PP No</th>
-          <th>Issue Date</th>
+          <th>Date</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -214,8 +213,11 @@
 <!-- THE CERTIFICATE TEMPLATE -->
 <div id="certificate">
   <div class="cert-border">
+    <!-- ABSOLUTE ELEMENTS -->
     <img id="companyLogo" src="" alt="">
-    
+    <img id="candidatePhoto" src="" alt="Candidate Photo" style="display:none;">
+
+    <!-- TOP SECTION -->
     <div class="header-section">
       <h2 class="company-name">OZELLAR MARINE PRIVATE LIMITED</h2>
       <p class="company-address">
@@ -228,22 +230,20 @@
       Certificate No: <span class="underline-text" id="outCertNo"></span>
     </div>
 
+    <!-- MAIN BODY -->
     <div class="main-content">
-      <div class="info-row">
-        This is to certify that <span class="underline-text" style="min-width: 350px;" id="outName"></span>
-      </div>
-      <div class="info-row">
-        PP No <span class="underline-text" style="min-width: 200px;" id="outPPNo"></span>
-      </div>
+      <div>This is to certify that <span class="underline-text" style="min-width: 380px;" id="outName"></span></div>
+      <div style="margin-top:5px;">PP No <span class="underline-text" style="min-width: 250px;" id="outPPNo"></span></div>
 
       <h2 class="training-title">ENCLOSED SPACE ENTRY TRAINING</h2>
 
       <div style="text-align: center;">
-        Conducted on <span class="underline-text" id="outConductedDate"></span> 
-        at <span class="underline-text" id="outConductedAt"></span>
+        Conducted on <span class="underline-text" style="min-width: 150px;" id="outConductedDate"></span> 
+        at <span class="underline-text" style="min-width: 150px;" id="outConductedAt"></span>
       </div>
     </div>
 
+    <!-- TOPICS (Fills space) -->
     <div class="topics-section">
       <h3>This course covered the following topics:</h3>
       <ul class="topics-list">
@@ -256,11 +256,10 @@
       </ul>
     </div>
 
-    <img id="candidatePhoto" src="" alt="Photo" style="display:none;">
-
+    <!-- FOOTER (Pushed to bottom) -->
     <div class="footer-section">
       <div class="issue-date-box">
-        Date of Issue: <span class="underline-text" id="outIssueDate"></span>
+        Date of Issue: <span class="underline-text" style="min-width: 120px;" id="outIssueDate"></span>
       </div>
       <div class="signature-box">
         <img id="signatureImage" src="" alt="" style="display:none;"><br>
@@ -271,7 +270,8 @@
 </div>
 
 <script>
-let certificateRecords = JSON.parse(localStorage.getItem("certRecords")) || [];
+// --- DATA STORAGE LOGIC ---
+let certificateRecords = JSON.parse(localStorage.getItem("ozellarCertRecords")) || [];
 
 document.addEventListener("DOMContentLoaded", () => {
     renderCertificateList();
@@ -279,48 +279,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function generateCertificate() {
   const fields = ['certNo', 'name', 'ppNo', 'conductedDate', 'conductedAt', 'issueDate'];
-  const data = {};
+  const vals = {};
   
-  for(let f of fields) {
-    data[f] = document.getElementById(f).value;
-    if(!data[f] && f !== 'issueDate') {
-        alert("Please fill all fields");
-        return;
+  for(let id of fields) {
+    vals[id] = document.getElementById(id).value;
+    if(!vals[id] && id !== 'issueDate') {
+        alert("Please complete all fields."); return;
     }
   }
 
-  const formattedIssueDate = data.issueDate || new Date().toISOString().split('T')[0];
+  const finalIssueDate = vals.issueDate || new Date().toISOString().split('T')[0];
 
-  // Update Preview
-  document.getElementById("outCertNo").textContent = data.certNo;
-  document.getElementById("outName").textContent = data.name;
-  document.getElementById("outPPNo").textContent = data.ppNo;
-  document.getElementById("outConductedDate").textContent = data.conductedDate;
-  document.getElementById("outConductedAt").textContent = data.conductedAt;
-  document.getElementById("outIssueDate").textContent = formattedIssueDate;
+  // Update UI Preview
+  document.getElementById("outCertNo").textContent = vals.certNo;
+  document.getElementById("outName").textContent = vals.name;
+  document.getElementById("outPPNo").textContent = vals.ppNo;
+  document.getElementById("outConductedDate").textContent = vals.conductedDate;
+  document.getElementById("outConductedAt").textContent = vals.conductedAt;
+  document.getElementById("outIssueDate").textContent = finalIssueDate;
 
   document.getElementById("certificate").style.display = "block";
   document.getElementById("downloadBtn").style.display = "inline-block";
 
-  // Save Record
-  certificateRecords.push({...data, issueDate: formattedIssueDate});
-  localStorage.setItem("certRecords", JSON.stringify(certificateRecords));
+  // Store logic
+  const record = {...vals, issueDate: finalIssueDate, timestamp: Date.now()};
+  certificateRecords.push(record);
+  localStorage.setItem("ozellarCertRecords", JSON.stringify(certificateRecords));
   renderCertificateList();
+  
+  window.scrollTo(0, document.body.scrollHeight);
 }
 
 function downloadPDF() {
   const element = document.getElementById("certificate");
-  const name = document.getElementById("outName").textContent;
+  const fileName = document.getElementById("outName").textContent || "Certificate";
 
   const opt = {
     margin: 0,
-    filename: `ESE_Cert_${name.replace(/\s+/g, '_')}.pdf`,
+    filename: `ESE_Cert_${fileName.replace(/\s+/g, '_')}.pdf`,
     image: { type: 'jpeg', quality: 1.0 },
-    html2canvas: { 
-        scale: 4, // High Resolution
-        useCORS: true,
-        letterRendering: true
-    },
+    html2canvas: { scale: 3, useCORS: true },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
@@ -328,24 +326,24 @@ function downloadPDF() {
 }
 
 function renderCertificateList() {
-  const table = document.getElementById("certificateTable");
-  table.innerHTML = "";
-  certificateRecords.forEach((record, index) => {
-    const row = `<tr>
-      <td>${record.certNo}</td>
-      <td>${record.name}</td>
-      <td>${record.ppNo}</td>
-      <td>${record.issueDate}</td>
-      <td>
-        <button onclick="viewFromRecord(${index})" style="background:#007bff; color:white; padding:5px 10px;">View</button>
-        <button onclick="deleteRecord(${index})" style="background:#dc3545; color:white; padding:5px 10px;">Delete</button>
-      </td>
-    </tr>`;
-    table.innerHTML += row;
+  const tbody = document.getElementById("certificateTable");
+  tbody.innerHTML = "";
+  certificateRecords.forEach((item, index) => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${item.certNo}</td>
+        <td>${item.name}</td>
+        <td>${item.ppNo}</td>
+        <td>${item.issueDate}</td>
+        <td>
+          <button onclick="viewRecord(${index})" style="background:#007bff; color:white; padding:4px 8px; font-size:12px;">View</button>
+          <button onclick="deleteRecord(${index})" style="background:#dc3545; color:white; padding:4px 8px; font-size:12px;">Delete</button>
+        </td>
+      </tr>`;
   });
 }
 
-function viewFromRecord(index) {
+function viewRecord(index) {
   const r = certificateRecords[index];
   document.getElementById("outCertNo").textContent = r.certNo;
   document.getElementById("outName").textContent = r.name;
@@ -358,42 +356,43 @@ function viewFromRecord(index) {
 }
 
 function deleteRecord(index) {
-  if(confirm("Delete this record?")) {
+  if(confirm("Permanently delete this record?")) {
     certificateRecords.splice(index, 1);
-    localStorage.setItem("certRecords", JSON.stringify(certificateRecords));
+    localStorage.setItem("ozellarCertRecords", JSON.stringify(certificateRecords));
     renderCertificateList();
   }
 }
 
 function toggleCertificates() {
-  const s = document.getElementById("certificateSection");
-  s.style.display = s.style.display === "none" ? "block" : "none";
+  const div = document.getElementById("certificateSection");
+  div.style.display = div.style.display === "none" ? "block" : "none";
 }
 
 function exportToExcel() {
-  if (certificateRecords.length === 0) return alert("No records!");
+  if (certificateRecords.length === 0) return alert("No data to export.");
   const ws = XLSX.utils.json_to_sheet(certificateRecords);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Certificates");
-  XLSX.writeFile(wb, "Ozellar_Marine_Records.xlsx");
+  XLSX.writeFile(wb, "Ozellar_Marine_ESE_Database.xlsx");
 }
 
-// Image Handlers
-function handleImage(inputId, imgId) {
-  document.getElementById(inputId).onchange = function(e) {
+// --- IMAGE FILE READER LOGIC ---
+function setupImageUpload(inputId, imgId) {
+  document.getElementById(inputId).addEventListener("change", function(e) {
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = function() {
       const img = document.getElementById(imgId);
       img.src = reader.result;
       img.style.display = "block";
     };
-    reader.readAsDataURL(e.target.files[0]);
-  };
+    if(this.files[0]) reader.readAsDataURL(this.files[0]);
+  });
 }
 
-handleImage("logoUpload", "companyLogo");
-handleImage("signatureUpload", "signatureImage");
-handleImage("photoUpload", "candidatePhoto");
+setupImageUpload("logoUpload", "companyLogo");
+setupImageUpload("signatureUpload", "signatureImage");
+setupImageUpload("photoUpload", "candidatePhoto");
+
 </script>
 
 </body>
