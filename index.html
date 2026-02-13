@@ -1,102 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>OZELLAR MARINE - ESE Certificate Generator</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <title>OZELLAR MARINE - ESE Certificate Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<style>
-body {
-    font-family: Calibri, sans-serif;
-    margin: 30px;
-    background: #ffffff;
-}
+  <style>
+    body {
+      font-family: Calibri, sans-serif;
+      margin: 30px;
+      background: #ffffff;
+    }
 
-.form-container {
-    border: 2px solid #000;
-    padding: 20px;
-    width: 420px;
-    border-radius: 10px;
-    background-color: white;
-    margin-bottom: 40px;
-}
+    .form-container {
+      border: 2px solid #000;
+      padding: 20px;
+      width: 420px;
+      border-radius: 10px;
+      background-color: white;
+      margin-bottom: 40px;
+    }
 
-label { display:block; margin-top:12px; }
-input { width:100%; padding:6px; margin-top:4px; }
+    label { display:block; margin-top:12px; }
+    input { width:100%; padding:6px; margin-top:4px; }
 
-button {
-    margin-top: 10px;
-    padding: 6px 12px;
-    background-color: #347c05;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+    button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      background-color: #347c05;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-button:disabled {
-    background-color: grey;
-    cursor: not-allowed;
-}
+    .certificate {
+      width: 744px;
+      height: 1073px;
+      padding: 15mm;
+      border: 2px solid #000;
+      background: white;
+      margin: auto;
+      display: none;
+      position: relative;
+      box-sizing: border-box;
+      page-break-after: always;
+    }
 
-.certificate {
-    width: 210mm;
-    height: 297mm;
-    padding: 15mm;
-    border: 2px solid #000;
-    background: white;
-    margin: auto;
-    display: none;
-    position: relative;
-    box-sizing: border-box;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-}
+    #companyLogo {
+      position: absolute;
+      top: 15mm;
+      right: 15mm;
+      width: 35mm;
+      display: none;
+    }
 
-#companyLogo {
-    position: absolute;
-    top: 15mm;
-    right: 15mm;
-    width: 35mm;
-    display: none;
-}
+    #candidatePhoto {
+      position: absolute;
+      top: 210mm;
+      left: 15mm;
+      width: 31mm;
+      height: 40mm;
+      object-fit: cover;
+      border: 1px solid #000;
+      display: none;
+    }
 
-#candidatePhoto {
-    position: absolute;
-    top: 220mm;
-    left: 15mm;
-    width: 35mm;
-    height: 45mm;
-    object-fit: cover;
-    border: 1px solid #000;
-    display: none;
-}
+    #signatureImage {
+      position: absolute;
+      bottom: 180px;
+      right: 85px;
+      width: 40mm;
+      display: none;
+    }
 
-#signatureImage {
-    width: 40mm;
-    display: none;
-}
+    .underline {
+      border-bottom: 1px solid #000;
+      padding: 0 5px;
+      min-width: 120px;
+      display: inline-block;
+    }
 
-.underline {
-    border-bottom: 1px solid #000;
-    padding: 0 5px;
-    min-width: 120px;
-    display: inline-block;
-}
-
-#candidatePhoto {
-    position: absolute;
-    top: 220mm;
-    left: 15mm;
-    width: 35mm;
-    height: 45mm;
-    object-fit: cover;
-    border: 1px solid #000;
-    display: none;
-    
-@page {
-    size: A4 portrait;
-    margin: 0;
-}
-</style>
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,148 +92,198 @@ button:disabled {
 <h1 style="color:#ED7C31;">ENCLOSED SPACE ENTRY TRAINING</h1>
 
 <div class="form-container">
-<label>Certificate No *</label><input id="certNo" required>
-<label>Candidate Name *</label><input id="name" required>
-<label>PP No *</label><input id="ppNo" required>
-<label>Conducted Date *</label><input id="conductedDate" type="date" required>
-<label>Conducted At *</label><input id="conductedAt" required>
-<label>Issue Date</label><input id="issueDate" type="date">
+  <label>Certificate No</label><input id="certNo">
+  <label>Candidate Name</label><input id="name">
+  <label>PP No</label><input id="ppNo">
+  <label>Conducted Date</label><input id="conductedDate">
+  <label>Conducted At</label><input id="conductedAt">
+  <label>Issue Date</label><input id="issueDate">
 
-<label>Upload Company Logo</label><input type="file" id="logoUpload" accept="image/*">
-<label>Upload Course Incharge Signature</label><input type="file" id="signatureUpload" accept="image/*">
-<label>Upload Passport Size Photo</label><input type="file" id="photoUpload" accept="image/*">
+  <label>Upload Company Logo</label><input type="file" id="logoUpload">
+  <label>Upload Course Incharge Signature</label><input type="file" id="signatureUpload">
+  <label>Upload Passport Size Photo</label><input type="file" id="photoUpload" accept="image/*">
 
-<button type="button" onclick="generateCertificate()">Generate Certificate</button>
-<button type="button" id="downloadBtn" style="display:none;" onclick="downloadPDF()">Download PDF</button>
+  <button type="button" onclick="generateCertificate()">Generate Certificate</button>
+  <button type="button" id="downloadBtn" style="display:none;" onclick="downloadPDF()">Download PDF</button>
 </div>
 
 <div id="certificate" class="certificate">
 
-<img id="companyLogo">
-<img id="candidatePhoto">
+  <img id="companyLogo">
+  <img id="candidatePhoto">
 
-<div style="text-align:center;">
+  <div style="text-align:center;">
     <h2 style="color:#ED7C31;">OZELLAR MARINE PRIVATE LIMITED</h2>
     <p>
-    Aneja Towers, B Block 4th Floor<br>
-    Plot 4 & 5, Developed Plot Estate<br>
-    Perungudi, Chennai – 600096
+      Aneja Towers, B Block 4th Floor<br>
+      Plot 4 & 5, Developed Plot Estate<br>
+      Perungudi, Chennai – 600096
     </p>
-</div>
+  </div>
 
-<h3 style="text-align:right;">
+  <h3 style="text-align:right;">
     Certificate No: <span class="underline" id="outCertNo"></span>
-</h3>
+  </h3>
 
-<p>This is to certify that <span class="underline" id="outName"></span></p>
-<p>PP No <span class="underline" id="outPPNo"></span></p>
+  <p>This is to certify that <span class="underline" id="outName"></span></p>
+  <p>PP No <span class="underline" id="outPPNo"></span></p>
 
-<h2 style="text-align:center;">ENCLOSED SPACE ENTRY TRAINING</h2>
-
-<p style="text-align:center;">
+  <h2 style="text-align:center;">ENCLOSED SPACE ENTRY TRAINING</h2>
+</br>
+  <p style="text-align:center;">
     Conducted on <span class="underline" id="outConductedDate"></span>
     at <span class="underline" id="outConductedAt"></span>
-</p>
+  </p>
+</br>
+</br>
+  <h3>This course covered the following topics:</h3>
 
-<div style="position:absolute; bottom:25mm; right:20mm; text-align:left;">
-    <img id="signatureImage"><br>
-    _______________________<br>
-    Course Incharge
-</div>
+  <ul style="font-size:16px; line-height:2;">
+    <li>Regulatory Requirement IMO Resolution A.1050(27), COWSP Chapter 15</li>
+    <li>Hazard related to enclosed spaces</li>
+    <li>Enclosed space entry procedure</li>
+    <li>Equipment and procedures required for enclosed space entry</li>
+    <li>Enclosed space entry procedure as per Company Manuals</li>
+    <li>Emergency response procedure</li>
+  </ul>
 
-<p style="position:absolute; bottom:15mm; left:15mm;">
+  <div style="position:absolute; bottom:150px; right:80px;">
+    _______________________<br>Course Incharge Signature
+  </div>
+
+  <p style="position:absolute; bottom:50px; left:40px;">
     Date of Issue: <span class="underline" id="outIssueDate"></span>
-</p>
+  </p>
+
+  <img id="signatureImage">
+
 </div>
 
 <script>
-let isSaved = false;
 
-function formatDate(dateString) {
-    return new Date(dateString).toLocaleDateString("en-GB");
-}
+const SHEET_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
+// -------------------- Generate Certificate --------------------
 function generateCertificate() {
-    const certNo = document.getElementById("certNo").value.trim();
-    const name = document.getElementById("name").value.trim();
-    const ppNo = document.getElementById("ppNo").value.trim();
-    const conductedDate = document.getElementById("conductedDate").value;
-    const conductedAt = document.getElementById("conductedAt").value.trim();
-    const issueDate = document.getElementById("issueDate").value;
 
-    if (!certNo || !name || !ppNo || !conductedDate || !conductedAt) {
-        alert("Please fill all required fields!");
-        return;
-    }
+  const certNo = document.getElementById("certNo").value;
+  const name = document.getElementById("name").value;
+  const ppNo = document.getElementById("ppNo").value;
+  const conductedDate = document.getElementById("conductedDate").value;
+  const conductedAt = document.getElementById("conductedAt").value;
+  const issueDateInput = document.getElementById("issueDate").value;
 
-    document.getElementById("outCertNo").textContent = certNo;
-    document.getElementById("outName").textContent = name;
-    document.getElementById("outPPNo").textContent = ppNo;
-    document.getElementById("outConductedDate").textContent = formatDate(conductedDate);
-    document.getElementById("outConductedAt").textContent = conductedAt;
-    document.getElementById("outIssueDate").textContent =
-        issueDate ? formatDate(issueDate) : new Date().toLocaleDateString("en-GB");
+  if (!certNo || !name || !ppNo || !conductedDate || !conductedAt) {
+    alert("Please fill all required fields.");
+    return;
+  }
 
-    document.getElementById("certificate").style.display = "block";
-    document.getElementById("downloadBtn").style.display = "inline-block";
+  // Show data on certificate
+  document.getElementById("outCertNo").textContent = certNo;
+  document.getElementById("outName").textContent = name;
+  document.getElementById("outPPNo").textContent = ppNo;
+  document.getElementById("outConductedDate").textContent = conductedDate;
+  document.getElementById("outConductedAt").textContent = conductedAt;
+  document.getElementById("outIssueDate").textContent =
+      issueDateInput || new Date().toLocaleDateString("en-GB");
 
-    // Save to Google Sheet via your Web App
-    if (!isSaved) {
-    fetch("https://script.google.com/macros/s/AKfycbz1YfzCDSxRpQ3LepAmdyCAedQNFETCxVy2cXqUjl1-U4IXqdYW-8PfRGunrhXHXAp8/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({certNo, name, ppNo, conductedDate, conductedAt, issueDate})
+  document.getElementById("certificate").style.display = "block";
+  document.getElementById("downloadBtn").style.display = "inline-block";
+
+  // Send data to Google Sheet
+  fetch(SHEET_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      certNo: certNo,
+      name: name,
+      ppNo: ppNo,
+      conductedDate: conductedDate,
+      conductedAt: conductedAt,
+      issueDate: document.getElementById("outIssueDate").textContent,
+      // Add extra fields if needed
+      additionalField1: "Extra data 1",
+      additionalField2: "Extra data 2"
     })
-    .then(res => res.json())
-    .then(response => {
-        if(response.status === "success") {
-            console.log("Saved to Sheet");
-            isSaved = true;
-        } else {
-            console.error(response.message);
-            alert("Error saving data: " + response.message);
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Fetch error: " + err);
-    });
-}
+  })
+  .then(res => res.json())
+  .then(() => {
+    console.log("Data sent to Google Sheet");
+    updateCertCount(); // refresh certificate count
+  })
+  .catch(err => console.error(err));
 }
 
+// -------------------- Download PDF --------------------
 function downloadPDF() {
-    const name = document.getElementById("name").value;
-    html2pdf().set({
-        margin: 0,
-        filename: name + "_Certificate.pdf",
-        image: { type: "jpeg", quality: 1 },
-        html2canvas: { scale: 4 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-    }).from(document.getElementById("certificate")).save();
+  const element = document.getElementById("certificate");
+  const candidateName = document.getElementById("name").value || "Certificate";
+
+  const opt = {
+    margin: 0,
+    filename: candidateName + "_Certificate.pdf",
+    image: { type: "jpeg", quality: 1 },
+    html2canvas: { scale: 3, useCORS: true, scrollY: 0 },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  };
+
+  html2pdf().set(opt).from(element).save();
 }
 
-function handleImageUpload(inputId, outputId) {
-    document.getElementById(inputId).addEventListener("change", function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        if (!file.type.startsWith("image/")) {
-            alert("Please upload a valid image file.");
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = function() {
-            const img = document.getElementById(outputId);
-            img.src = reader.result;
-            img.style.display = "block";
-        };
-        reader.readAsDataURL(file);
-    });
+// -------------------- Image Upload Handlers --------------------
+document.getElementById("logoUpload").onchange = function(e) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const logo = document.getElementById("companyLogo");
+    logo.src = reader.result;
+    logo.style.display = "block";
+  };
+  reader.readAsDataURL(e.target.files[0]);
+};
+
+document.getElementById("signatureUpload").onchange = function(e) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const sign = document.getElementById("signatureImage");
+    sign.src = reader.result;
+    sign.style.display = "block";
+  };
+  reader.readAsDataURL(e.target.files[0]);
+};
+
+document.getElementById("photoUpload").onchange = function(e) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const photo = document.getElementById("candidatePhoto");
+    photo.src = reader.result;
+    photo.style.display = "block";
+  };
+  reader.readAsDataURL(e.target.files[0]);
+};
+
+// -------------------- Certificate Count --------------------
+function updateCertCount() {
+  fetch(SHEET_URL)
+    .then(res => res.json())
+    .then(data => {
+      let counterEl = document.getElementById("certCount");
+      if (!counterEl) {
+        // Create element if not exists
+        const p = document.createElement("p");
+        p.innerHTML = `Certificates Issued: <span id="certCount">${data.count || 0}</span>`;
+        document.querySelector(".form-container").prepend(p);
+      } else {
+        counterEl.textContent = data.count || 0;
+      }
+    })
+    .catch(err => console.error("Error fetching certificate count:", err));
 }
 
-handleImageUpload("logoUpload", "companyLogo");
-handleImageUpload("signatureUpload", "signatureImage");
-handleImageUpload("photoUpload", "candidatePhoto");
+// Call once on page load
+updateCertCount();
+
 </script>
+
 
 </body>
 </html>
