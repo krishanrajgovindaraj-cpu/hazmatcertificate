@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>OZELLAR MARINE - ESE Certificate Generator</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
     body {
@@ -92,6 +92,9 @@
 <h1 style="color:#ED7C31;">ENCLOSED SPACE ENTRY TRAINING</h1>
 
 <div class="form-container">
+  <button type="button" onclick="exportToExcel()">Export All Records to Excel</button>
+<p><strong>Total Certificates Generated:</strong> <span id="certCount">0</span></p>
+
   <label>Certificate No</label><input id="certNo">
   <label>Candidate Name</label><input id="name">
   <label>PP No</label><input id="ppNo">
@@ -276,6 +279,29 @@ document.getElementById("photoUpload").onchange = function(e) {
   };
   reader.readAsDataURL(e.target.files[0]);
 };
+function exportToExcel() {
+
+  if (certificateRecords.length === 0) {
+    alert("No records available to export.");
+    return;
+  }
+
+  // Format headers properly
+  const formattedData = certificateRecords.map(record => ({
+    "Certificate No": record.certNo,
+    "Candidate Name": record.name,
+    "PP No": record.ppNo,
+    "Conducted Date": record.conductedDate,
+    "Conducted At": record.conductedAt,
+    "Issue Date": record.issueDate
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(formattedData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Certificates");
+
+  XLSX.writeFile(wb, "OZELLAR_MARINE_Certificates.xlsx");
+}
 
 </script>
 
