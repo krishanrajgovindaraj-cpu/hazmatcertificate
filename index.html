@@ -2,7 +2,10 @@
 <html>
 <head>
   <title>OZELLAR MARINE - ESE Certificate Generator</title>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
   <style>
     body {
       font-family: Calibri, sans-serif;
@@ -32,36 +35,32 @@
       cursor: pointer;
     }
 
+    /* ================= A4 CERTIFICATE ================= */
     #certificate {
-  width: 794px;          /* A4 width in px */
-  height: 1123px;        /* A4 height in px */
-  padding: 40px;
-  box-sizing: border-box;
-  background: white;
-  margin: auto;
-  page-break-after: always;
-}
-
-@media print {
-  body {
-    margin: 0;
-  }
-}
+      width: 794px;
+      height: 1123px;
+      padding: 40px;
+      box-sizing: border-box;
+      background: white;
+      margin: auto;
+      position: relative;   /* IMPORTANT */
+      display: none;
+    }
 
     #companyLogo {
       position: absolute;
-      top: 15mm;
-      right: 15mm;
-      width: 35mm;
+      top: 60px;
+      right: 60px;
+      width: 130px;
       display: none;
     }
 
     #candidatePhoto {
       position: absolute;
-      top: 210mm;
-      left: 15mm;
-      width: 31mm;
-      height: 40mm;
+      bottom: 150px;
+      left: 60px;
+      width: 120px;
+      height: 150px;
       object-fit: cover;
       border: 1px solid #000;
       display: none;
@@ -69,9 +68,9 @@
 
     #signatureImage {
       position: absolute;
-      bottom: 180px;
-      right: 85px;
-      width: 40mm;
+      bottom: 170px;
+      right: 120px;
+      width: 120px;
       display: none;
     }
 
@@ -82,42 +81,14 @@
       display: inline-block;
     }
 
-    @page {
-      size: A4 portrait;
-      margin: 1;
-    }
   </style>
 </head>
 
 <body>
 
 <h1 style="color:#ED7C31;">ENCLOSED SPACE ENTRY TRAINING</h1>
-<a href="ese.html">ESE</a>
 
 <div class="form-container">
-<h2>
-  Generated Certificates
-  <button type="button" onclick="toggleCertificates()" 
-          style="margin-left:10px;background:#e3b00a;">
-    Show / Hide
-  </button>
-</h2>
-
-<div id="certificateSection">
-<table border="1" width="100%" cellpadding="5" style="border-collapse:collapse;">
-  <thead style="background:#f2f2f2;">
-    <tr>
-      <th>Cert No</th>
-      <th>Name</th>
-      <th>PP No</th>
-      <th>Issue Date</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody id="certificateTable"></tbody>
-</table>
-</div>
-<button onclick="exportToExcel()">Export All Records to Excel</button>
 
   <label>Certificate No</label><input id="certNo">
   <label>Candidate Name</label><input id="name">
@@ -128,13 +99,16 @@
 
   <label>Upload Company Logo</label><input type="file" id="logoUpload">
   <label>Upload Course Incharge Signature</label><input type="file" id="signatureUpload">
-  <label>Upload Passport Size Photo</label><input type="file" id="photoUpload" accept="image/*">
+  <label>Upload Passport Size Photo</label><input type="file" id="photoUpload">
 
   <button type="button" onclick="generateCertificate()">Generate Certificate</button>
   <button type="button" id="downloadBtn" style="display:none;" onclick="downloadPDF()">Download PDF</button>
+
 </div>
 
-<div id="certificate" class="certificate">
+<!-- ================= CERTIFICATE ================= -->
+
+<div id="certificate">
 
   <img id="companyLogo">
   <img id="candidatePhoto">
@@ -156,13 +130,12 @@
   <p>PP No <span class="underline" id="outPPNo"></span></p>
 
   <h2 style="text-align:center;">ENCLOSED SPACE ENTRY TRAINING</h2>
-</br>
+
   <p style="text-align:center;">
     Conducted on <span class="underline" id="outConductedDate"></span>
     at <span class="underline" id="outConductedAt"></span>
   </p>
-</br>
-</br>
+
   <h3>This course covered the following topics:</h3>
 
   <ul style="font-size:16px; line-height:2;">
@@ -174,76 +147,45 @@
     <li>Emergency response procedure</li>
   </ul>
 
-  <div style="position:absolute; bottom:150px; right:80px;">
+  <div style="position:absolute; bottom:150px; right:120px;">
     _______________________<br>Course Incharge Signature
   </div>
 
-  <p style="position:absolute; bottom:50px; left:40px;">
+  <p style="position:absolute; bottom:60px; left:60px;">
     Date of Issue: <span class="underline" id="outIssueDate"></span>
   </p>
 
   <img id="signatureImage">
 
 </div>
-<div id="certificate">
-   <!-- All certificate content inside this -->
-</div>git
+
 <script>
 
-// ================= STORE RECORDS =================
-let certificateRecords = JSON.parse(localStorage.getItem("certRecords")) || [];
-
-// ================= ON LOAD =================
-document.addEventListener("DOMContentLoaded", function () {
-  updateCertCount();
-  renderCertificateList();
-});
-
-// ================= GENERATE CERTIFICATE =================
 function generateCertificate() {
 
-  const certNo = document.getElementById("certNo").value;
-  const name = document.getElementById("name").value;
-  const ppNo = document.getElementById("ppNo").value;
-  const conductedDate = document.getElementById("conductedDate").value;
-  const conductedAt = document.getElementById("conductedAt").value;
-  const issueDateInput = document.getElementById("issueDate").value;
+  const certNo = certNo.value;
+  const nameVal = name.value;
+  const pp = ppNo.value;
+  const cd = conductedDate.value;
+  const ca = conductedAt.value;
+  const issue = issueDate.value || new Date().toLocaleDateString("en-GB");
 
-  if (!certNo || !name || !ppNo || !conductedDate || !conductedAt) {
+  if (!certNo || !nameVal || !pp || !cd || !ca) {
     alert("Please fill all required fields.");
     return;
   }
 
-  const issueDate = issueDateInput || new Date().toLocaleDateString("en-GB");
+  outCertNo.textContent = certNo;
+  outName.textContent = nameVal;
+  outPPNo.textContent = pp;
+  outConductedDate.textContent = cd;
+  outConductedAt.textContent = ca;
+  outIssueDate.textContent = issue;
 
-  // Show certificate preview
-  document.getElementById("outCertNo").textContent = certNo;
-  document.getElementById("outName").textContent = name;
-  document.getElementById("outPPNo").textContent = ppNo;
-  document.getElementById("outConductedDate").textContent = conductedDate;
-  document.getElementById("outConductedAt").textContent = conductedAt;
-  document.getElementById("outIssueDate").textContent = issueDate;
-
-  document.getElementById("certificate").style.display = "block";
-  document.getElementById("downloadBtn").style.display = "inline-block";
-
-  const record = {
-    certNo,
-    name,
-    ppNo,
-    conductedDate,
-    conductedAt,
-    issueDate
-  };
-
-  certificateRecords.push(record);
-  localStorage.setItem("certRecords", JSON.stringify(certificateRecords));
-
-  updateCertCount();
-  renderCertificateList();
+  certificate.style.display = "block";
+  downloadBtn.style.display = "inline-block";
 }
 
-// ================= DOWNLOAD PDF =================
 function downloadPDF() {
 
   const element = document.getElementById("certificate");
@@ -252,202 +194,41 @@ function downloadPDF() {
     margin: 0,
     filename: 'Certificate.pdf',
     image: { type: 'jpeg', quality: 1 },
-    html2canvas: { 
-      scale: 2,
-      useCORS: true
-    },
-    jsPDF: { 
-      unit: 'px',
-      format: [794, 1123],   // EXACT A4 SIZE
-      orientation: 'portrait'
-    }
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'px', format: [794,1123], orientation: 'portrait' }
   };
 
   html2pdf().set(opt).from(element).save();
 }
-// ================= EXPORT TO EXCEL =================
-function exportToExcel() {
 
-  if (certificateRecords.length === 0) {
-    alert("No records available to export.");
-    return;
-  }
-
-  const formattedData = certificateRecords.map(record => ({
-    "Certificate No": record.certNo,
-    "Candidate Name": record.name,
-    "PP No": record.ppNo,
-    "Conducted Date": record.conductedDate,
-    "Conducted At": record.conductedAt,
-    "Issue Date": record.issueDate
-  }));
-
-  const ws = XLSX.utils.json_to_sheet(formattedData);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Certificates");
-
-  XLSX.writeFile(wb, "OZELLAR_MARINE_Certificates.xlsx");
-}
-
-// ================= UPDATE COUNTER =================
-function updateCertCount() {
-  const counter = document.getElementById("certCount");
-  if (counter) {
-    counter.textContent = certificateRecords.length;
-  }
-}
-
-// ================= RENDER TABLE =================
-function renderCertificateList() {
-
-  const table = document.getElementById("certificateTable");
-  if (!table) return;
-
-  table.innerHTML = "";
-
-  certificateRecords.forEach((record, index) => {
-
-    const row = `
-      <tr>
-        <td>${record.certNo}</td>
-        <td>${record.name}</td>
-        <td>${record.ppNo}</td>
-        <td>${record.issueDate}</td>
-        <td>
-<button onclick="viewPDFfromRecord(${index})">View PDF</button>          <button onclick="deleteCertificate(${index})" style="background:red;color:white;">Delete</button>
-        </td>
-      </tr>
-    `;
-
-    table.innerHTML += row;
-  });
-}
-
-// ================= VIEW CERTIFICATE =================
-function viewCertificate(index) {
-
-  const record = certificateRecords[index];
-
-  document.getElementById("outCertNo").textContent = record.certNo;
-  document.getElementById("outName").textContent = record.name;
-  document.getElementById("outPPNo").textContent = record.ppNo;
-  document.getElementById("outConductedDate").textContent = record.conductedDate;
-  document.getElementById("outConductedAt").textContent = record.conductedAt;
-  document.getElementById("outIssueDate").textContent = record.issueDate;
-
-  document.getElementById("certificate").style.display = "block";
-  document.getElementById("downloadBtn").style.display = "inline-block";
-}
-
-// ================= DELETE CERTIFICATE =================
-function deleteCertificate(index) {
-
-  if (!confirm("Are you sure you want to delete this certificate?")) return;
-
-  certificateRecords.splice(index, 1);
-  localStorage.setItem("certRecords", JSON.stringify(certificateRecords));
-
-  updateCertCount();
-  renderCertificateList();
-}
-
-// ================= IMAGE UPLOAD =================
-document.getElementById("logoUpload").onchange = function(e) {
+// IMAGE UPLOADS
+logoUpload.onchange = function(e) {
   const reader = new FileReader();
   reader.onload = () => {
-    const logo = document.getElementById("companyLogo");
-    logo.src = reader.result;
-    logo.style.display = "block";
+    companyLogo.src = reader.result;
+    companyLogo.style.display = "block";
   };
   reader.readAsDataURL(e.target.files[0]);
 };
 
-document.getElementById("signatureUpload").onchange = function(e) {
+signatureUpload.onchange = function(e) {
   const reader = new FileReader();
   reader.onload = () => {
-    const sign = document.getElementById("signatureImage");
-    sign.src = reader.result;
-    sign.style.display = "block";
+    signatureImage.src = reader.result;
+    signatureImage.style.display = "block";
   };
   reader.readAsDataURL(e.target.files[0]);
 };
 
-document.getElementById("photoUpload").onchange = function(e) {
+photoUpload.onchange = function(e) {
   const reader = new FileReader();
   reader.onload = () => {
-    const photo = document.getElementById("candidatePhoto");
-    photo.src = reader.result;
-    photo.style.display = "block";
+    candidatePhoto.src = reader.result;
+    candidatePhoto.style.display = "block";
   };
   reader.readAsDataURL(e.target.files[0]);
 };
-function viewPDF() {
 
-  const element = document.getElementById("certificate");
-
-  const opt = {
-    margin: 0,
-    image: { type: "jpeg", quality: 1 },
-    html2canvas: { scale: 3 },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-  };
-
-  html2pdf()
-    .set(opt)
-    .from(element)
-    .toPdf()
-    .get('pdf')
-    .then(function (pdf) {
-
-      const blob = pdf.output('blob');
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
-
-    });
-}
-function viewPDFfromRecord(index) {
-
-  const record = certificateRecords[index];
-
-  // Fill certificate
-  document.getElementById("outCertNo").textContent = record.certNo;
-  document.getElementById("outName").textContent = record.name;
-  document.getElementById("outPPNo").textContent = record.ppNo;
-  document.getElementById("outConductedDate").textContent = record.conductedDate;
-  document.getElementById("outConductedAt").textContent = record.conductedAt;
-  document.getElementById("outIssueDate").textContent = record.issueDate;
-
-  document.getElementById("certificate").style.display = "block";
-
-  const element = document.getElementById("certificate");
-
-  const opt = {
-    margin: 0,
-    image: { type: "jpeg", quality: 1 },
-    html2canvas: { scale: 3 },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-  };
-
-  html2pdf()
-    .set(opt)
-    .from(element)
-    .toPdf()
-    .get('pdf')
-    .then(function (pdf) {
-      const blob = pdf.output('blob');
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
-    });
-}
-function toggleCertificates() {
-  const section = document.getElementById("certificateSection");
-
-  if (section.style.display === "none") {
-    section.style.display = "block";
-  } else {
-    section.style.display = "none";
-  }
-}
 </script>
 
 </body>
