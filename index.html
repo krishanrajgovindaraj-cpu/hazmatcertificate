@@ -7,6 +7,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
+
     body {
       font-family: Calibri, sans-serif;
       margin: 30px;
@@ -35,32 +36,34 @@
       cursor: pointer;
     }
 
-    /* ================= A4 CERTIFICATE ================= */
+    /* ===================== A4 CERTIFICATE ===================== */
+
     #certificate {
-      width: 794px;
-      height: 1123px;
-      padding: 40px;
+      width: 210mm;
+      min-height: 297mm;
+      padding: 20mm;
       box-sizing: border-box;
       background: white;
       margin: auto;
-      position: relative;   /* IMPORTANT */
+      position: relative;
       display: none;
+      border: 1px solid black;
     }
 
     #companyLogo {
       position: absolute;
-      top: 60px;
-      right: 60px;
-      width: 130px;
+      top: 20mm;
+      right: 20mm;
+      width: 35mm;
       display: none;
     }
 
     #candidatePhoto {
       position: absolute;
-      bottom: 150px;
-      left: 60px;
-      width: 120px;
-      height: 150px;
+      bottom: 25mm;
+      left: 20mm;
+      width: 30mm;
+      height: 40mm;
       object-fit: cover;
       border: 1px solid #000;
       display: none;
@@ -68,9 +71,9 @@
 
     #signatureImage {
       position: absolute;
-      bottom: 170px;
-      right: 120px;
-      width: 120px;
+      bottom: 35mm;
+      right: 30mm;
+      width: 35mm;
       display: none;
     }
 
@@ -147,11 +150,11 @@
     <li>Emergency response procedure</li>
   </ul>
 
-  <div style="position:absolute; bottom:150px; right:120px;">
+  <div style="position:absolute; bottom:35mm; right:30mm;">
     _______________________<br>Course Incharge Signature
   </div>
 
-  <p style="position:absolute; bottom:60px; left:60px;">
+  <p style="position:absolute; bottom:20mm; left:20mm;">
     Date of Issue: <span class="underline" id="outIssueDate"></span>
   </p>
 
@@ -163,24 +166,17 @@
 
 function generateCertificate() {
 
-  const certNo = certNo.value;
-  const nameVal = name.value;
-  const pp = ppNo.value;
-  const cd = conductedDate.value;
-  const ca = conductedAt.value;
-  const issue = issueDate.value || new Date().toLocaleDateString("en-GB");
-
-  if (!certNo || !nameVal || !pp || !cd || !ca) {
+  if (!certNo.value || !name.value || !ppNo.value || !conductedDate.value || !conductedAt.value) {
     alert("Please fill all required fields.");
     return;
   }
 
-  outCertNo.textContent = certNo;
-  outName.textContent = nameVal;
-  outPPNo.textContent = pp;
-  outConductedDate.textContent = cd;
-  outConductedAt.textContent = ca;
-  outIssueDate.textContent = issue;
+  outCertNo.textContent = certNo.value;
+  outName.textContent = name.value;
+  outPPNo.textContent = ppNo.value;
+  outConductedDate.textContent = conductedDate.value;
+  outConductedAt.textContent = conductedAt.value;
+  outIssueDate.textContent = issueDate.value || new Date().toLocaleDateString("en-GB");
 
   certificate.style.display = "block";
   downloadBtn.style.display = "inline-block";
@@ -194,14 +190,15 @@ function downloadPDF() {
     margin: 0,
     filename: 'Certificate.pdf',
     image: { type: 'jpeg', quality: 1 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'px', format: [794,1123], orientation: 'portrait' }
+    html2canvas: { scale: 3, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   html2pdf().set(opt).from(element).save();
 }
 
-// IMAGE UPLOADS
+/* IMAGE UPLOADS */
+
 logoUpload.onchange = function(e) {
   const reader = new FileReader();
   reader.onload = () => {
