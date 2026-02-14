@@ -32,17 +32,21 @@
       cursor: pointer;
     }
 
-      .certificate {
-      width: 744px;
-      height: 1073px;
-      margin: auto;
-      padding: 20px;
-      border: 2px solid #000000;
-      box-sizing: border-box;
-      background: #fff;
-      position: relative;
-      display: none;
-    }
+    #certificate {
+  width: 794px;          /* A4 width in px */
+  height: 1123px;        /* A4 height in px */
+  padding: 40px;
+  box-sizing: border-box;
+  background: white;
+  margin: auto;
+  page-break-after: always;
+}
+
+@media print {
+  body {
+    margin: 0;
+  }
+}
 
     #companyLogo {
       position: absolute;
@@ -181,6 +185,9 @@
   <img id="signatureImage">
 
 </div>
+<div id="certificate">
+   <!-- All certificate content inside this -->
+</div>git
 <script>
 
 // ================= STORE RECORDS =================
@@ -240,28 +247,24 @@ function generateCertificate() {
 function downloadPDF() {
 
   const element = document.getElementById("certificate");
-  const candidateName = document.getElementById("outName").textContent || "Certificate";
 
   const opt = {
     margin: 0,
-    filename: candidateName + "_Certificate.pdf",
-    image: { type: "jpeg", quality: 1 },
-    html2canvas: { scale: 3 },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+    filename: 'Certificate.pdf',
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: { 
+      scale: 2,
+      useCORS: true
+    },
+    jsPDF: { 
+      unit: 'px',
+      format: [794, 1123],   // EXACT A4 SIZE
+      orientation: 'portrait'
+    }
   };
 
-  html2pdf()
-  .set(opt)
-  .from(element)
-  .toPdf()
-  .get('pdf')
-  .then(function (pdf) {
-    const blob = pdf.output('blob');
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-  });
+  html2pdf().set(opt).from(element).save();
 }
-
 // ================= EXPORT TO EXCEL =================
 function exportToExcel() {
 
