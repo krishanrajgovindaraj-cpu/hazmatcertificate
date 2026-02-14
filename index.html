@@ -4,10 +4,8 @@
   <title>OZELLAR MARINE - ESE Certificate Generator</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
-
     body {
       font-family: Calibri, sans-serif;
       margin: 30px;
@@ -36,8 +34,7 @@
       cursor: pointer;
     }
 
-    /* ===================== A4 CERTIFICATE ===================== */
-
+    /* ===== A4 CERTIFICATE ===== */
     #certificate {
       width: 210mm;
       min-height: 297mm;
@@ -83,7 +80,6 @@
       min-width: 120px;
       display: inline-block;
     }
-
   </style>
 </head>
 
@@ -93,23 +89,39 @@
 
 <div class="form-container">
 
-  <label>Certificate No</label><input id="certNo">
-  <label>Candidate Name</label><input id="name">
-  <label>PP No</label><input id="ppNo">
-  <label>Conducted Date</label><input id="conductedDate">
-  <label>Conducted At</label><input id="conductedAt">
-  <label>Issue Date</label><input id="issueDate">
+  <label>Certificate No</label>
+  <input id="certNo">
 
-  <label>Upload Company Logo</label><input type="file" id="logoUpload">
-  <label>Upload Course Incharge Signature</label><input type="file" id="signatureUpload">
-  <label>Upload Passport Size Photo</label><input type="file" id="photoUpload">
+  <label>Candidate Name</label>
+  <input id="name">
+
+  <label>PP No</label>
+  <input id="ppNo">
+
+  <label>Conducted Date</label>
+  <input id="conductedDate">
+
+  <label>Conducted At</label>
+  <input id="conductedAt">
+
+  <label>Issue Date</label>
+  <input id="issueDate">
+
+  <label>Upload Company Logo</label>
+  <input type="file" id="logoUpload">
+
+  <label>Upload Course Incharge Signature</label>
+  <input type="file" id="signatureUpload">
+
+  <label>Upload Passport Size Photo</label>
+  <input type="file" id="photoUpload">
 
   <button type="button" onclick="generateCertificate()">Generate Certificate</button>
   <button type="button" id="downloadBtn" style="display:none;" onclick="downloadPDF()">Download PDF</button>
 
 </div>
 
-<!-- ================= CERTIFICATE ================= -->
+<!-- ===== CERTIFICATE ===== -->
 
 <div id="certificate">
 
@@ -166,20 +178,28 @@
 
 function generateCertificate() {
 
-  if (!certNo.value || !name.value || !ppNo.value || !conductedDate.value || !conductedAt.value) {
+  const certNoVal = document.getElementById("certNo").value.trim();
+  const nameVal = document.getElementById("name").value.trim();
+  const ppNoVal = document.getElementById("ppNo").value.trim();
+  const conductedDateVal = document.getElementById("conductedDate").value.trim();
+  const conductedAtVal = document.getElementById("conductedAt").value.trim();
+  const issueDateVal = document.getElementById("issueDate").value.trim();
+
+  if (certNoVal === "" || nameVal === "" || ppNoVal === "" || conductedDateVal === "" || conductedAtVal === "") {
     alert("Please fill all required fields.");
     return;
   }
 
-  outCertNo.textContent = certNo.value;
-  outName.textContent = name.value;
-  outPPNo.textContent = ppNo.value;
-  outConductedDate.textContent = conductedDate.value;
-  outConductedAt.textContent = conductedAt.value;
-  outIssueDate.textContent = issueDate.value || new Date().toLocaleDateString("en-GB");
+  document.getElementById("outCertNo").textContent = certNoVal;
+  document.getElementById("outName").textContent = nameVal;
+  document.getElementById("outPPNo").textContent = ppNoVal;
+  document.getElementById("outConductedDate").textContent = conductedDateVal;
+  document.getElementById("outConductedAt").textContent = conductedAtVal;
+  document.getElementById("outIssueDate").textContent =
+      issueDateVal || new Date().toLocaleDateString("en-GB");
 
-  certificate.style.display = "block";
-  downloadBtn.style.display = "inline-block";
+  document.getElementById("certificate").style.display = "block";
+  document.getElementById("downloadBtn").style.display = "inline-block";
 }
 
 function downloadPDF() {
@@ -199,29 +219,32 @@ function downloadPDF() {
 
 /* IMAGE UPLOADS */
 
-logoUpload.onchange = function(e) {
+document.getElementById("logoUpload").onchange = function(e) {
   const reader = new FileReader();
   reader.onload = () => {
-    companyLogo.src = reader.result;
-    companyLogo.style.display = "block";
+    const logo = document.getElementById("companyLogo");
+    logo.src = reader.result;
+    logo.style.display = "block";
   };
   reader.readAsDataURL(e.target.files[0]);
 };
 
-signatureUpload.onchange = function(e) {
+document.getElementById("signatureUpload").onchange = function(e) {
   const reader = new FileReader();
   reader.onload = () => {
-    signatureImage.src = reader.result;
-    signatureImage.style.display = "block";
+    const sign = document.getElementById("signatureImage");
+    sign.src = reader.result;
+    sign.style.display = "block";
   };
   reader.readAsDataURL(e.target.files[0]);
 };
 
-photoUpload.onchange = function(e) {
+document.getElementById("photoUpload").onchange = function(e) {
   const reader = new FileReader();
   reader.onload = () => {
-    candidatePhoto.src = reader.result;
-    candidatePhoto.style.display = "block";
+    const photo = document.getElementById("candidatePhoto");
+    photo.src = reader.result;
+    photo.style.display = "block";
   };
   reader.readAsDataURL(e.target.files[0]);
 };
