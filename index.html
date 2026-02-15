@@ -46,7 +46,7 @@
 
     .certificate {
       width: 794px;       /* A4 width in px */
-      height: 1123px;     /* A4 height in px */
+      min-height: 1123px;    /* A4 height in px */
       margin: auto;
       padding: 20px;
       border: 2px solid #000;
@@ -361,25 +361,42 @@ function toggleList(){
 
 /* DOWNLOAD PDF - waits for images to load */
 function downloadPDF(){
+
   entryForm.style.display="none";
 
-  const images = certificate.querySelectorAll("img");
+  const element = document.getElementById("certificate");
+
+  const images = element.querySelectorAll("img");
   const loadPromises = Array.from(images).map(img => {
     if(img.complete) return Promise.resolve();
     return new Promise(res => img.onload = img.onerror = res);
   });
 
   Promise.all(loadPromises).then(()=>{
-    html2pdf().from(certificate).set({
-      filename: candidateName.value+"_Certificate.pdf",
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'px', format: 'a4' }
-    }).save().finally(()=>{
+
+    const opt = {
+      margin: 0,
+      filename: candidateName.value + "_Certificate.pdf",
+      image: { type: 'jpeg', quality: 1 },
+      html2canvas: { 
+        scale: 2,
+        useCORS: true,
+        scrollY: 0
+      },
+      jsPDF: { 
+        unit: 'mm', 
+        format: 'a4', 
+        orientation: 'portrait'
+      }
+    };
+
+    html2pdf().set(opt).from(element).save().then(()=>{
       entryForm.style.display="block";
     });
-  });
-}
 
+  });
+
+}
 </script>
 
 </body>
