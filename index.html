@@ -45,8 +45,8 @@
     }
 
     .certificate {
-      width: 794px;       /* A4 width in px */
-      min-height: 1123px;    /* A4 height in px */
+      width: 744px;
+      height: 1073px;
       margin: auto;
       padding: 20px;
       border: 2px solid #000;
@@ -54,8 +54,6 @@
       background: #fff;
       position: relative;
       display: none;
-      page-break-inside: avoid;
-      page-break-after: avoid;
     }
 
     #companyLogo {
@@ -76,10 +74,10 @@
 
     #candidatePhoto {
       position: absolute;
-      top: 200px;      /* fixed for A4 PDF */
-      left: 20px;
-      width: 90px;
-      height: 90px;
+      top: 210mm;
+      left: 15mm;
+      width: 30mm;
+      height: 30mm;
       object-fit: cover;
       border: 1px solid #000;
       display: none;
@@ -231,7 +229,7 @@
 
 <script>
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbyTF8Z_H4v_duvK7Y1rqBVLZwrBk4mA5md7sF_vEy6gFFlR28DIWliOAU3ibZ8iYB9yGQ/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbx8ojlKK9gol_o2l1MlCOQ3ASkFJIHzCjVikifVbX_PpI73vPD8ZIC66c1P85cIfb4LYg/exec";
 
 let certCount = Number(localStorage.getItem("certCount")) || 0;
 let certificateList = JSON.parse(localStorage.getItem("certificateList")) || [];
@@ -311,7 +309,8 @@ function saveToGoogleSheet(data) {
   });
 }
 
-/* LIST MANAGEMENT */
+/* rest of your functions remain SAME */
+
 function renderList() {
   certListBody.innerHTML = "";
   certificateList.forEach((c,i)=>{
@@ -359,45 +358,18 @@ function toggleList(){
   listSection.style.display=listSection.style.display==="none"?"block":"none";
 }
 
-/* DOWNLOAD PDF - waits for images to load */
 function downloadPDF(){
-
   entryForm.style.display="none";
-
-  const element = document.getElementById("certificate");
-
-  const images = element.querySelectorAll("img");
-  const loadPromises = Array.from(images).map(img => {
-    if(img.complete) return Promise.resolve();
-    return new Promise(res => img.onload = img.onerror = res);
-  });
-
-  Promise.all(loadPromises).then(()=>{
-
-    const opt = {
-      margin: 0,
-      filename: candidateName.value + "_Certificate.pdf",
-      image: { type: 'jpeg', quality: 1 },
-      html2canvas: { 
-        scale: 2,
-        useCORS: true,
-        scrollY: 0
-      },
-      jsPDF: { 
-        unit: 'mm', 
-        format: 'a4', 
-        orientation: 'portrait'
-      }
-    };
-
-    html2pdf().set(opt).from(element).save().then(()=>{
-      entryForm.style.display="block";
-    });
-
-  });
-
+  setTimeout(()=>{
+    html2pdf().from(certificate).set({
+      filename: candidateName.value+"_Certificate.pdf",
+      html2canvas:{scale:2},
+      jsPDF:{format:"a4"}
+    }).save().then(()=>entryForm.style.display="block");
+  },800);
 }
+
 </script>
 
 </body>
-</html>
+</html> 
