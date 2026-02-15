@@ -76,7 +76,7 @@
 
     #candidatePhoto {
       position: absolute;
-      top: 200px;      /* fixed for A4 PDF */
+      top: 200px;      
       left: 20px;
       width: 90px;
       height: 90px;
@@ -233,35 +233,60 @@
 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbyTF8Z_H4v_duvK7Y1rqBVLZwrBk4mA5md7sF_vEy6gFFlR28DIWliOAU3ibZ8iYB9yGQ/exec";
 
+/* ====== DEFINE ELEMENTS ====== */
+const entryForm = document.getElementById("entryForm");
+const certificate = document.getElementById("certificate");
+const downloadBtn = document.getElementById("downloadBtn");
+const companyLogo = document.getElementById("companyLogo");
+const signatureImage = document.getElementById("signatureImage");
+const candidatePhoto = document.getElementById("candidatePhoto");
+
+const outCertNo = document.getElementById("outCertNo");
+const outCandidateName = document.getElementById("outCandidateName");
+const outPPNo = document.getElementById("outPPNo");
+const outConductedDate = document.getElementById("outConductedDate");
+const outConductedAt = document.getElementById("outConductedAt");
+const outIssueDate = document.getElementById("outIssueDate");
+
+const certNo = document.getElementById("certNo");
+const candidateName = document.getElementById("candidateName");
+const ppNo = document.getElementById("ppNo");
+const conductedDate = document.getElementById("conductedDate");
+const conductedAt = document.getElementById("conductedAt");
+const issueDate = document.getElementById("issueDate");
+
+const logoUpload = document.getElementById("logoUpload");
+const signatureUpload = document.getElementById("signatureUpload");
+const photoUpload = document.getElementById("photoUpload");
+
+/* ====== LOCAL STORAGE ====== */
 let certCount = Number(localStorage.getItem("certCount")) || 0;
 let certificateList = JSON.parse(localStorage.getItem("certificateList")) || [];
 
 document.getElementById("certCount").innerText = certCount;
 renderList();
 
-/* LOGO */
+/* ====== FILE UPLOADS ====== */
 logoUpload.onchange = e => {
   const r = new FileReader();
   r.onload = () => { companyLogo.src = r.result; companyLogo.style.display="block"; };
   r.readAsDataURL(e.target.files[0]);
 };
 
-/* SIGNATURE */
 signatureUpload.onchange = e => {
   const r = new FileReader();
   r.onload = () => { signatureImage.src = r.result; signatureImage.style.display="block"; };
   r.readAsDataURL(e.target.files[0]);
 };
 
-/* PHOTO */
 photoUpload.onchange = e => {
   const r = new FileReader();
   r.onload = () => { candidatePhoto.src = r.result; candidatePhoto.style.display="block"; };
   r.readAsDataURL(e.target.files[0]);
 };
 
+/* ====== GENERATE CERTIFICATE ====== */
 function generateCertificate() {
-
   outCertNo.innerText = certNo.value;
   outCandidateName.innerText = candidateName.value;
   outPPNo.innerText = ppNo.value;
@@ -289,30 +314,23 @@ function generateCertificate() {
   localStorage.setItem("certificateList", JSON.stringify(certificateList));
   renderList();
 
-  // ✅ Send data to Google Sheet
   saveToGoogleSheet(newData);
 }
 
-/* GOOGLE SHEET SAVE FUNCTION */
+/* ====== GOOGLE SHEET SAVE ====== */
 function saveToGoogleSheet(data) {
   fetch(SHEET_URL, {
     method: "POST",
     mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: {"Content-Type": "application/json"},
     body: JSON.stringify(data)
-  })
-  .then(() => {
-    console.log("Saved to Google Sheet");
-  })
-  .catch(error => {
-    console.error("Error:", error);
-  });
+  }).then(()=> console.log("Saved to Google Sheet"))
+    .catch(err=> console.error(err));
 }
 
-/* LIST MANAGEMENT */
+/* ====== LIST MANAGEMENT ====== */
 function renderList() {
+  const certListBody = document.getElementById("certListBody");
   certListBody.innerHTML = "";
   certificateList.forEach((c,i)=>{
     certListBody.innerHTML += `
@@ -356,10 +374,11 @@ function exportToCSV(){
 }
 
 function toggleList(){
+  const listSection = document.getElementById("listSection");
   listSection.style.display=listSection.style.display==="none"?"block":"none";
 }
 
-/* DOWNLOAD PDF - waits for images to load */
+/* ====== DOWNLOAD PDF ====== */
 function downloadPDF(){
   entryForm.style.display="none";
 
@@ -381,6 +400,5 @@ function downloadPDF(){
 }
 
 </script>
-
 </body>
 </html>
