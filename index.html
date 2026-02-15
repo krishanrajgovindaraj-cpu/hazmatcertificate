@@ -279,14 +279,15 @@ function generateCertificate() {
   localStorage.setItem("certCount", certCount);
   document.getElementById("certCount").innerText = certCount;
 
-  const newData = {
-    certNo: certNo.value,
-    name: candidateName.value,
-    ppNo: ppNo.value,
-    conductedDate: conductedDate.value,
-    conductedAt: conductedAt.value,
-    issueDate: outIssueDate.innerText
-  };
+ const newData = {
+  sheetName: "ESE",   // 🔥 CHANGE THIS PER HTML FILE
+  certNo: certNo.value,
+  name: candidateName.value,
+  ppNo: ppNo.value,
+  conductedDate: conductedDate.value,
+  conductedAt: conductedAt.value,
+  issueDate: outIssueDate.innerText
+};
 
   certificateList.push(newData);
   localStorage.setItem("certificateList", JSON.stringify(certificateList));
