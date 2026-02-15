@@ -43,18 +43,28 @@
       border-radius: 5px;
       cursor: pointer;
     }
+@page {
+  size: A4;
+  margin: 0;
+}
 
-    .certificate {
-      width: 744px;
-      height: 1073px;
-      margin: auto;
-      padding: 20px;
-      border: 2px solid #000;
-      box-sizing: border-box;
-      background: #fff;
-      position: relative;
-      display: none;
-    }
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.certificate {
+  width: 200mm;          /* A4 width */
+  min-height: 280mm;     /* A4 height */
+  margin: 0 auto;
+  padding: 20mm;
+  border: 2px solid #000;
+  box-sizing: border-box;
+  background: #fff;
+  position: relative;
+  display: block;        /* IMPORTANT: must be visible */
+}
+
 
     #companyLogo {
       position: absolute;
@@ -187,24 +197,23 @@
     <h2 style="color:#ED7C31;">OZELLAR MARINE PRIVATE LIMITED</h2>
     <p><strong>Aneja Towers, B Block 4th Floor,<br>Perungudi, Chennai – 600096</strong></p>
   </div>
-
+<br>
   <p style="text-align:right;">
     Certificate No: <span class="underline" id="outCertNo"></span>
   </p>
-
+<br>
   <p>This is to certify that <strong><span class="underline" id="outCandidateName"></span></strong></p>
 
   <p>PP No <span class="underline" id="outPPNo"></span> has successfully completed</p>
 
   <h2 style="text-align:center;">ENCLOSED SPACE ENTRY TRAINING</h2>
-
+<br>
   <p style="text-align:center;">
     Conducted on <span class="underline" id="outConductedDate"></span>
     at <span class="underline" id="outConductedAt"></span>
   </p>
 
   <h2 style="font-size:19px;">This course covered the following topics:</h2>
-
   <ul style="font-size:16px; line-height:2.1;">
     <li>Regulatory Requirement IMO Resolution A.1050(27), COWSP Chapter 15</li>
     <li>Hazard related to enclosed spaces</li>
@@ -229,9 +238,7 @@
 
 <script>
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbx8ojlKK9gol_o2l1MlCOQ3ASkFJIHzCjVikifVbX_PpI73vPD8ZIC66c1P85cIfb4LYg/exec";
-
-let certCount = Number(localStorage.getItem("certCount")) || 0;
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbx8ojlKK9gol_o2l1MlCOQ3ASkFJIHzCjVikifVbX_PpI73vPD8ZIC66c1P85cIfb4LYg/exec";let certCount = Number(localStorage.getItem("certCount")) || 0;
 let certificateList = JSON.parse(localStorage.getItem("certificateList")) || [];
 
 document.getElementById("certCount").innerText = certCount;
