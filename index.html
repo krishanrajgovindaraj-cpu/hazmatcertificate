@@ -368,11 +368,11 @@ function downloadPDF(){
     }).save().then(()=>entryForm.style.display="block");
   },800);
 }
-fetch("https://script.google.com/macros/s/AKfycbwiYtmP3yquA69OddCcxS4_03bcaU9S_lAtAGBn4vd3VQkyaB8MLT4DPhGiOFV7HrrLnQ/exec", {
+fetch("https://script.google.com/macros/s/AKfycbyTF8Z_H4v_duvK7Y1rqBVLZwrBk4mA5md7sF_vEy6gFFlR28DIWliOAU3ibZ8iYB9yGQ/exec", {
   method: "POST",
   body: JSON.stringify(data)
 })
-fetch("https://script.google.com/macros/s/AKfycbwiYtmP3yquA69OddCcxS4_03bcaU9S_lAtAGBn4vd3VQkyaB8MLT4DPhGiOFV7HrrLnQ/exec")
+fetch("https://script.google.com/macros/s/AKfycbyTF8Z_H4v_duvK7Y1rqBVLZwrBk4mA5md7sF_vEy6gFFlR28DIWliOAU3ibZ8iYB9yGQ/exec")
 .then(res => res.json())
 .then(data => {
   console.log(data);
