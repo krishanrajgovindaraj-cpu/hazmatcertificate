@@ -1,381 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>OZELLAR MARINE Certificate Generator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ozellar Marine Training Portal</title>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-  <style>
-    body {
-      font-family: Calibri, sans-serif;
-      margin: 30px;
-      background-color: #ffffff;
-    }
-
-    .form-container {
-      border: 2px solid #aa2f2f;
-      padding: 20px;
-      width: 320px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-top: 12px;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-      padding: 6px;
-      margin-top: 5px;
-      box-sizing: border-box;
-    }
-
-    button {
-      margin-top: 12px;
-      padding: 6px 12px;
-      background-color: #347c05;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-@page {
-  size: A4;
-  margin: 0;
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-body {
-  margin: 0;
-  padding: 0;
+body{
+    background: linear-gradient(to bottom, #041C32, #06283D, #0b1f2e);
+    color:white;
+    overflow-x:hidden;
 }
 
-.certificate {
-  width: 200mm;          /* A4 width */
-  min-height: 280mm;     /* A4 height */
-  margin: 0 auto;
-  padding: 20mm;
-  border: 2px solid #000;
-  box-sizing: border-box;
-  background: #fff;
-  position: relative;
-  display: block;        /* IMPORTANT: must be visible */
+/* HEADER */
+header{
+    background:#021018;
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:2px solid #fe9e04;
 }
 
+.logo{
+    font-size:20px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
 
-    #companyLogo {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 120px;
-      display: none;
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:18px;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:5px;
+    transition:0.3s;
+}
+
+nav a:hover{
+    background:#1363DF;
+}
+
+nav a.active{
+    background:#1363DF;
+}
+
+/* HERO */
+.hero{
+    position:relative;
+    height:85vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    overflow:hidden;
+}
+
+/* Ship Animation */
+.ship{
+    position:absolute;
+    bottom:90px;
+    left:-300px;
+    font-size:70px;
+    animation:sail 22s linear infinite;
+}
+
+@keyframes sail{
+    0%{ left:-300px; }
+    100%{ left:110%; }
+}
+
+/* Waves */
+.wave{
+    position:absolute;
+    bottom:0;
+    width:200%;
+    height:120px;
+    background:rgba(19,99,223,0.6);
+    border-radius:50%;
+    animation:wave 7s infinite linear;
+}
+
+.wave:nth-child(2){
+    bottom:25px;
+    opacity:0.6;
+    animation-duration:10s;
+}
+
+@keyframes wave{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-50%); }
+}
+
+.hero-content{
+    z-index:2;
+}
+
+.hero h2{
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.hero p{
+    margin-bottom:25px;
+    font-size:18px;
+    color:#cfe8ff;
+}
+
+.btn{
+    background:#1363DF;
+    padding:12px 28px;
+    border-radius:6px;
+    text-decoration:none;
+    color:white;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.btn:hover{
+    background:#47B5FF;
+}
+
+/* COURSES */
+.section{
+    padding:70px 20px;
+    text-align:center;
+    background:#021018;
+}
+
+.section h3{
+    margin-bottom:40px;
+    font-size:28px;
+}
+
+.course-grid{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:25px;
+}
+
+.card{
+    background:#06283D;
+    padding:25px;
+    width:220px;
+    border-radius:8px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.4);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    background:#0b3c5d;
+}
+
+.card a{
+    text-decoration:none;
+    color:white;
+    font-weight:bold;
+}
+
+/* FOOTER */
+footer{
+    background:#000c14;
+    text-align:center;
+    padding:18px;
+    font-size:14px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+    header{
+        flex-direction:column;
+        gap:10px;
     }
 
-    #signatureImage {
-      position: absolute;
-      bottom: 185px;
-      right: 75px;
-      width: 150px;
-      display: none;
+    .hero h2{
+        font-size:28px;
     }
 
-    #candidatePhoto {
-      position: absolute;
-      top: 210mm;
-      left: 15mm;
-      width: 30mm;
-      height: 30mm;
-      object-fit: cover;
-      border: 1px solid #000;
-      display: none;
+    .ship{
+        font-size:50px;
     }
-
-    .underline {
-      border-bottom: 1px solid #000;
-      padding: 0 10px;
-      min-width: 120px;
-      display: inline-block;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 10px;
-    }
-
-    table, th, td {
-      border: 1px solid #000;
-    }
-
-    th, td {
-      padding: 5px;
-      text-align: center;
-      font-size: 14px;
-    }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
-<h3>Total Certificates Generated: <span id="certCount">0</span></h3>
+<header>
+    <div class="logo">⚓ OZELLAR MARINE</div>
+    <nav>
+        <a href="index.html" class="active">HOME</a>
+        <a href="ese.html">ESE</a>
+        <a href="hazmat.html">HAZMAT</a>
+        <a href="hatch-cover.html">HATCH COVER</a>
+        <a href="mental-health.html">MENTAL HEALTH</a>
+        <a href="pjf.html">PJF</a>
+    </nav>
+</header>
 
-<button onclick="toggleList()">Show / Hide Generated List</button>
+<section class="hero">
+    <div class="hero-content">
+        <h2>Ozellar Maritime pvt Ltd</h2>
+        <p>Committed to Safety • Compliance • Excellence at Sea</p>
+        <a href="#courses" class="btn">Explore Courses</a>
+    </div>
 
-<div id="listSection" style="display:none; margin-top:20px;">
-  <h3>Generated Certificate List</h3>
+    <!-- Animated Ship -->
+    <div class="ship">🚢</div>
 
-  <button onclick="deleteSelected()" style="background:orange;color:white;">
-    Delete Selected
-  </button>
+    <!-- Waves -->
+    <div class="wave"></div>
+    <div class="wave"></div>
+</section>
 
-  <button onclick="exportToCSV()" style="background:green;color:white;">
-    Export to Excel
-  </button>
+<section class="section" id="courses">
+    <h3>Our Training Programs</h3>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Select</th>
-        <th>#</th>
-        <th>Certificate No</th>
-        <th>Candidate Name</th>
-        <th>PP No</th>
-        <th>Conducted Date</th>
-        <th>Location</th>
-        <th>Issue Date</th>
-        <th>Delete</th>
-      </tr>
-    </thead>
-    <tbody id="certListBody"></tbody>
-  </table>
-</div>
+    <div class="course-grid">
+        <div class="card"><a href="ese.html">ESE Training</a></div>
+        <div class="card"><a href="hazmat.html">HAZMAT Awareness</a></div>
+        <div class="card"><a href="hatch-cover.html">Hatch Cover Safety</a></div>
+        <div class="card"><a href="mental-health.html">Mental Health at Sea</a></div>
+        <div class="card"><a href="pjf.html">Pre Job Familiarization</a></div>
+    </div>
+</section>
 
-<h1 style="color:#ED7C31;">ENCLOSED SPACE ENTRY TRAINING</h1>
-
-<div class="form-container" id="entryForm">
-
-  <label>Certificate No</label>
-  <input type="text" id="certNo">
-
-  <label>Candidate Name</label>
-  <input type="text" id="candidateName">
-
-  <label>PP No</label>
-  <input type="text" id="ppNo">
-
-  <label>Conducted Date</label>
-  <input type="text" id="conductedDate">
-
-  <label>Conducted At</label>
-  <input type="text" id="conductedAt">
-
-  <label>Issue Date</label>
-  <input type="text" id="issueDate">
-
-  <label>Upload Company Logo</label>
-  <input type="file" id="logoUpload" accept="image/*">
-
-  <label>Upload Signature</label>
-  <input type="file" id="signatureUpload" accept="image/*">
-
-  <label>Upload Candidate Photo</label>
-  <input type="file" id="photoUpload" accept="image/*">
-
-  <button onclick="generateCertificate()">Generate Certificate</button>
-  <button id="downloadBtn" style="display:none;" onclick="downloadPDF()">Download PDF</button>
-</div>
-
-<div id="certificate" class="certificate">
-
-  <img id="companyLogo">
-  <img id="candidatePhoto">
-
-  <div style="text-align:center; margin-top:20px;">
-    <h2 style="color:#ED7C31;">OZELLAR MARINE PRIVATE LIMITED</h2>
-    <p><strong>Aneja Towers, B Block 4th Floor,<br>Perungudi, Chennai – 600096</strong></p>
-  </div>
-<br>
-  <p style="text-align:right;">
-    Certificate No: <span class="underline" id="outCertNo"></span>
-  </p>
-  <p>This is to certify that <strong><span class="underline" id="outCandidateName"></span></strong></p>
-
-  <p>PP No <span class="underline" id="outPPNo"></span> has successfully completed</p>
-<br>
-  <h2 style="text-align:center;">ENCLOSED SPACE ENTRY TRAINING</h2>
-
-  <p style="text-align:center;">
-    Conducted on <span class="underline" id="outConductedDate"></span>
-    at <span class="underline" id="outConductedAt"></span>
-  </p>
-  <h2 style="font-size:19px;">This course covered the following topics:</h2> 
-  <ul style="font-size:16px; line-height:2.1;">
-    <li>Regulatory Requirement IMO Resolution A.1050(27), COWSP Chapter 15</li>
-    <li>Hazard related to enclosed spaces</li>
-    <li>Enclosed space entry procedure</li>
-    <li>Equipment and procedures required for enclosed space entry</li>
-    <li>Enclosed space entry procedure as per Company Manuals</li>
-    <li>Emergency response procedure</li>
-  </ul>
-
- <div style="position:absolute; bottom:150px; right:80px; text-align:right;">
-  _______________________<br>
-  Course In-Charge Signature
-</div>
-
-  <p style="position:absolute; bottom:50px; left:40px;">
-    Date of Issue: <span class="underline" id="outIssueDate"></span>
-  </p>
-
-  <img id="signatureImage">
-
-</div>
-
-<script>
-
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxwAMCSa2CDZyiTQb34Ibk9Aw1pvpY4QPRCwfHZiOdkr7seXdcCGozOeev2-j3SmF66wA/exec";let certCount = Number(localStorage.getItem("certCount")) || 0;
-let certificateList = JSON.parse(localStorage.getItem("certificateList")) || [];
-
-document.getElementById("certCount").innerText = certCount;
-renderList();
-
-/* LOGO */
-logoUpload.onchange = e => {
-  const r = new FileReader();
-  r.onload = () => { companyLogo.src = r.result; companyLogo.style.display="block"; };
-  r.readAsDataURL(e.target.files[0]);
-};
-
-/* SIGNATURE */
-signatureUpload.onchange = e => {
-  const r = new FileReader();
-  r.onload = () => { signatureImage.src = r.result; signatureImage.style.display="block"; };
-  r.readAsDataURL(e.target.files[0]);
-};
-
-/* PHOTO */
-photoUpload.onchange = e => {
-  const r = new FileReader();
-  r.onload = () => { candidatePhoto.src = r.result; candidatePhoto.style.display="block"; };
-  r.readAsDataURL(e.target.files[0]);
-};
-
-function generateCertificate() {
-
-  outCertNo.innerText = certNo.value;
-  outCandidateName.innerText = candidateName.value;
-  outPPNo.innerText = ppNo.value;
-  outConductedDate.innerText = conductedDate.value;
-  outConductedAt.innerText = conductedAt.value;
-  outIssueDate.innerText = issueDate.value || new Date().toLocaleDateString("en-GB");
-
-  certificate.style.display = "block";
-  downloadBtn.style.display = "inline-block";
-
-  certCount++;
-  localStorage.setItem("certCount", certCount);
-  document.getElementById("certCount").innerText = certCount;
-
- const newData = {
-  sheetName: "ESE",   // 🔥 CHANGE THIS PER HTML FILE
-  certNo: certNo.value,
-  name: candidateName.value,
-  ppNo: ppNo.value,
-  conductedDate: conductedDate.value,
-  conductedAt: conductedAt.value,
-  issueDate: outIssueDate.innerText
-};
-
-  certificateList.push(newData);
-  localStorage.setItem("certificateList", JSON.stringify(certificateList));
-  renderList();
-
-  // ✅ Send data to Google Sheet
-  saveToGoogleSheet(newData);
-}
-
-/* GOOGLE SHEET SAVE FUNCTION */
-function saveToGoogleSheet(data) {
-  fetch(SHEET_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  })
-  .then(() => {
-    console.log("Saved to Google Sheet");
-  })
-  .catch(error => {
-    console.error("Error:", error);
-  });
-}
-
-/* rest of your functions remain SAME */
-
-function renderList() {
-  certListBody.innerHTML = "";
-  certificateList.forEach((c,i)=>{
-    certListBody.innerHTML += `
-      <tr>
-        <td><input type="checkbox" class="rowCheck"></td>
-        <td>${i+1}</td>
-        <td>${c.certNo}</td>
-        <td>${c.name}</td>
-        <td>${c.ppNo}</td>
-        <td>${c.conductedDate}</td>
-        <td>${c.conductedAt}</td>
-        <td>${c.issueDate}</td>
-        <td><button onclick="deleteOne(${i})" style="background:red;color:white;">X</button></td>
-      </tr>`;
-  });
-}
-
-function deleteOne(i){
-  certificateList.splice(i,1);
-  localStorage.setItem("certificateList", JSON.stringify(certificateList));
-  renderList();
-}
-
-function deleteSelected(){
-  const checks=document.querySelectorAll(".rowCheck");
-  certificateList=certificateList.filter((_,i)=>!checks[i].checked);
-  localStorage.setItem("certificateList", JSON.stringify(certificateList));
-  renderList();
-}
-
-function exportToCSV(){
-  let csv="Certificate No,Candidate Name,PP No,Conducted Date,Location,Issue Date\n";
-  certificateList.forEach(c=>{
-    csv+=`"${c.certNo}","${c.name}","${c.ppNo}","${c.conductedDate}","${c.conductedAt}","${c.issueDate}"\n`;
-  });
-  const blob=new Blob([csv],{type:"text/csv"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="Generated_Certificates.csv";
-  a.click();
-}
-
-function toggleList(){
-  listSection.style.display=listSection.style.display==="none"?"block":"none";
-}
-
-function downloadPDF(){
-  entryForm.style.display="none";
-  setTimeout(()=>{
-    html2pdf().from(certificate).set({
-      filename: candidateName.value+"_Certificate.pdf",
-      html2canvas:{scale:2},
-      jsPDF:{format:"a4"}
-    }).save().then(()=>entryForm.style.display="block");
-  },800);
-}
-
-</script>
+<footer>
+© 2026 Ozellar Marine | Shipping & Maritime Training Solutions
+</footer>
 
 </body>
-</html> 
+</html>
