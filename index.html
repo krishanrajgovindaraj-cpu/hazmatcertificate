@@ -42,10 +42,30 @@
       background: white;
       width: 60%;
       margin: auto;
-      padding: 30px;
+      padding: 20px;
       border-radius: 10px;
       box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
     }
+	.database-btn {
+    position: fixed;      /* Fixed position */
+    bottom: 20px;         /* Distance from bottom */
+    right: 20px;          /* Distance from right */
+    background: #0b3d91;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;        /* Stay above other elements */
+}
+
+.database-btn:hover {
+    background: #062a63;
+    transform: translateY(-3px);
+}
   </style>
 </head>
 
@@ -54,26 +74,29 @@
   <div class="box">
     <h1>Ozellar Training</h1>
     <h2>Certificate Portal</h2>
+<button class="database-btn"
+        onclick="window.open('https://docs.google.com/spreadsheets/d/1Hr6K0NzquEMifYR3OlQH-ungBDNbXEO8deVg9eFjT4A/edit?gid=0#gid=0', '_blank'); return false;">
+    <i class="fa-solid fa-database"></i> DATABASE
+</button>
+    <br><br>
 
-    <br>
-
-    <button onclick="window.open('ese.html','_blank')">
+    <button onclick="window.open('ese.html', '_blank')">
       ENCLOSED SPACE ENTRY
     </button>
 
-    <button onclick="window.open('hazmat.html','_blank')">
-      HAZMAT
-    </button>
-
-    <button onclick="window.open('mh.html','_blank')">
-      MENTAL HEALTH
-    </button>
-
-    <button onclick="window.open('hatch.html','_blank')">
+    <button onclick="window.open('hazmat.html', '_blank')">
       HATCH COVER
     </button>
 
-    <button onclick="window.open('pjf.html','_blank')">
+    <button onclick="window.open('mh.html', '_blank')">
+      HAZMAT
+    </button>
+
+    <button onclick="window.open('hatch.html', '_blank')">
+      MENTAL HEALTH
+    </button>
+
+    <button onclick="window.open('pjf.html', '_blank')">
       PJF
     </button>
 
