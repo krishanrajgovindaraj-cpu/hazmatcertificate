@@ -237,7 +237,6 @@ body {
   <img id="signatureImage">
 
 </div>
-
 <script>
 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbyqtiCjRuS7Xu0VtMUK2o6Q2PE0I1w9h1JXs0Ex3txl9gSmb2Dr4ocwTjORqbW15-ThQA/exec";
@@ -245,12 +244,22 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbyqtiCjRuS7Xu0VtMUK2o
 const STORAGE_KEY_COUNT = "certCount_MH";
 const STORAGE_KEY_LIST = "certificateList_MH";
 
-let certCount = Number(localStorage.getItem(STORAGE_KEY_COUNT)) || 0;
-let certificateList = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST)) || [];
+let certCount = 0;
+let certificateList = [];
 
-// Show saved count on page load
-document.getElementById("certCount").innerText = certCount;
-renderList();
+/* ============================= */
+/* PAGE LOAD - VERY IMPORTANT */
+/* ============================= */
+
+window.onload = function () {
+
+  certCount = Number(localStorage.getItem(STORAGE_KEY_COUNT)) || 0;
+  certificateList = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST)) || [];
+
+  document.getElementById("certCount").innerText = certCount;
+
+  renderList();
+};
 
 
 /* ============================= */
@@ -291,6 +300,11 @@ photoUpload.onchange = e => {
 
 function generateCertificate() {
 
+  if(!certNo.value || !candidateName.value){
+    alert("Please fill required fields");
+    return;
+  }
+
   outCertNo.innerText = certNo.value;
   outCandidateName.innerText = candidateName.value;
   outPPNo.innerText = ppNo.value;
@@ -301,12 +315,10 @@ function generateCertificate() {
   certificate.style.display = "block";
   downloadBtn.style.display = "inline-block";
 
-  // Increase counter
   certCount++;
 
-  // Create data object
   const newData = {
-    sheetName: "MENTAL HEALTH",  // Change per page if needed
+    sheetName: "MENTAL HEALTH",
     certNo: certNo.value,
     name: candidateName.value,
     ppNo: ppNo.value,
@@ -315,18 +327,15 @@ function generateCertificate() {
     issueDate: outIssueDate.innerText
   };
 
-  // Add to list
   certificateList.push(newData);
 
-  // Save to localStorage
   localStorage.setItem(STORAGE_KEY_COUNT, certCount);
   localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
 
-  // Update UI
   document.getElementById("certCount").innerText = certCount;
+
   renderList();
 
-  // Send to Google Sheet
   saveToGoogleSheet(newData);
 }
 
@@ -344,20 +353,23 @@ function saveToGoogleSheet(data) {
     },
     body: JSON.stringify(data)
   })
-  .then(() => console.log("Saved to Google Sheet"))
+  .then(() => console.log("Saved"))
   .catch(error => console.error("Error:", error));
 }
 
 
 /* ============================= */
-/* RENDER CERTIFICATE LIST */
+/* RENDER LIST */
 /* ============================= */
 
 function renderList() {
-  certListBody.innerHTML = "";
+
+  const tbody = document.getElementById("certListBody");
+  tbody.innerHTML = "";
 
   certificateList.forEach((c, i) => {
-    certListBody.innerHTML += `
+
+    const row = `
       <tr>
         <td><input type="checkbox" class="rowCheck"></td>
         <td>${i+1}</td>
@@ -373,7 +385,10 @@ function renderList() {
           X
           </button>
         </td>
-      </tr>`;
+      </tr>
+    `;
+
+    tbody.innerHTML += row;
   });
 }
 
@@ -382,27 +397,32 @@ function renderList() {
 /* DELETE FUNCTIONS */
 /* ============================= */
 
-function deleteOne(i){
-  certificateList.splice(i,1);
+function deleteOne(index){
+  certificateList.splice(index,1);
+
   localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
+
   renderList();
 }
 
 function deleteSelected(){
+
   const checks = document.querySelectorAll(".rowCheck");
 
   certificateList = certificateList.filter((_,i)=>!checks[i].checked);
 
   localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
+
   renderList();
 }
 
 
 /* ============================= */
-/* EXPORT TO CSV */
+/* EXPORT CSV */
 /* ============================= */
 
 function exportToCSV(){
+
   let csv="Certificate No,Candidate Name,PP No,Conducted Date,Location,Issue Date\n";
 
   certificateList.forEach(c=>{
@@ -453,14 +473,23 @@ function downloadPDF(){
 /* ============================= */
 
 function resetCounter(){
-  if(confirm("Are you sure you want to reset certificate count?")){
+
+  if(confirm("Reset certificate count?")){
+
     certCount = 0;
+    certificateList = [];
+
     localStorage.setItem(STORAGE_KEY_COUNT, certCount);
+    localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
+
     document.getElementById("certCount").innerText = certCount;
+
+    renderList();
   }
 }
 
 </script>
+
 
 </body>
 </html> 
