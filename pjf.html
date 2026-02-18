@@ -241,30 +241,42 @@ body {
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxwAMCSa2CDZyiTQb34Ibk9Aw1pvpY4QPRCwfHZiOdkr7seXdcCGozOeev2-j3SmF66wA/exec";
 
 const STORAGE_KEY_COUNT = "certCount_PJF";
-const STORAGE_KEY_LIST = "certificateList_PJF";
+const STORAGE_KEY_LIST  = "certificateList_PJF";
+
+/* LOAD DATA ON PAGE LOAD */
 let certCount = Number(localStorage.getItem(STORAGE_KEY_COUNT)) || 0;
 let certificateList = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST)) || [];
+
 document.getElementById("certCount").innerText = certCount;
 renderList();
 
 /* LOGO */
 logoUpload.onchange = e => {
   const r = new FileReader();
-  r.onload = () => { companyLogo.src = r.result; companyLogo.style.display="block"; };
+  r.onload = () => { 
+    companyLogo.src = r.result; 
+    companyLogo.style.display="block"; 
+  };
   r.readAsDataURL(e.target.files[0]);
 };
 
 /* SIGNATURE */
 signatureUpload.onchange = e => {
   const r = new FileReader();
-  r.onload = () => { signatureImage.src = r.result; signatureImage.style.display="block"; };
+  r.onload = () => { 
+    signatureImage.src = r.result; 
+    signatureImage.style.display="block"; 
+  };
   r.readAsDataURL(e.target.files[0]);
 };
 
 /* PHOTO */
 photoUpload.onchange = e => {
   const r = new FileReader();
-  r.onload = () => { candidatePhoto.src = r.result; candidatePhoto.style.display="block"; };
+  r.onload = () => { 
+    candidatePhoto.src = r.result; 
+    candidatePhoto.style.display="block"; 
+  };
   r.readAsDataURL(e.target.files[0]);
 };
 
@@ -280,48 +292,41 @@ function generateCertificate() {
   certificate.style.display = "block";
   downloadBtn.style.display = "inline-block";
 
+  /* UPDATE COUNT */
   certCount++;
-  localStorage.setItem("certCount", certCount);
+  localStorage.setItem(STORAGE_KEY_COUNT, certCount);
   document.getElementById("certCount").innerText = certCount;
 
- const newData = {
-  sheetName: "pjf",   // 🔥 CHANGE THIS PER HTML FILE
-  certNo: certNo.value,
-  name: candidateName.value,
-  ppNo: ppNo.value,
-  conductedDate: conductedDate.value,
-  conductedAt: conductedAt.value,
-  issueDate: outIssueDate.innerText
-};
+  const newData = {
+    sheetName: "pjf",
+    certNo: certNo.value,
+    name: candidateName.value,
+    ppNo: ppNo.value,
+    conductedDate: conductedDate.value,
+    conductedAt: conductedAt.value,
+    issueDate: outIssueDate.innerText
+  };
 
   certificateList.push(newData);
-  localStorage.setItem("certificateList", JSON.stringify(certificateList));
+  localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
   renderList();
 
-  // ✅ Send data to Google Sheet
   saveToGoogleSheet(newData);
 }
 
-/* GOOGLE SHEET SAVE FUNCTION */
+/* GOOGLE SHEET SAVE */
 function saveToGoogleSheet(data) {
   fetch(SHEET_URL, {
     method: "POST",
     mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
   })
-  .then(() => {
-    console.log("Saved to Google Sheet");
-  })
-  .catch(error => {
-    console.error("Error:", error);
-  });
+  .then(() => console.log("Saved to Google Sheet"))
+  .catch(error => console.error("Error:", error));
 }
 
-/* rest of your functions remain SAME */
-
+/* RENDER LIST */
 function renderList() {
   certListBody.innerHTML = "";
   certificateList.forEach((c,i)=>{
@@ -340,19 +345,22 @@ function renderList() {
   });
 }
 
+/* DELETE ONE */
 function deleteOne(i){
   certificateList.splice(i,1);
-  localStorage.setItem("certificateList", JSON.stringify(certificateList));
+  localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
   renderList();
 }
 
+/* DELETE SELECTED */
 function deleteSelected(){
   const checks=document.querySelectorAll(".rowCheck");
   certificateList=certificateList.filter((_,i)=>!checks[i].checked);
-  localStorage.setItem("certificateList", JSON.stringify(certificateList));
+  localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
   renderList();
 }
 
+/* EXPORT CSV */
 function exportToCSV(){
   let csv="Certificate No,Candidate Name,PP No,Conducted Date,Location,Issue Date\n";
   certificateList.forEach(c=>{
@@ -361,7 +369,7 @@ function exportToCSV(){
   const blob=new Blob([csv],{type:"text/csv"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
-  a.download="Generated_Certificates.csv";
+  a.download="Generated_Certificates_PJF.csv";
   a.click();
 }
 
@@ -369,6 +377,7 @@ function toggleList(){
   listSection.style.display=listSection.style.display==="none"?"block":"none";
 }
 
+/* PDF DOWNLOAD */
 function downloadPDF(){
   entryForm.style.display="none";
   setTimeout(()=>{
@@ -381,6 +390,7 @@ function downloadPDF(){
 }
 
 </script>
+
 
 </body>
 </html> 
