@@ -244,31 +244,49 @@ body {
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxwAMCSa2CDZyiTQb34Ibk9Aw1pvpY4QPRCwfHZiOdkr7seXdcCGozOeev2-j3SmF66wA/exec";
 const STORAGE_KEY_COUNT = "certCount_HAZMAT";
 const STORAGE_KEY_LIST = "certificateList_HAZMAT";
-
 let certCount = Number(localStorage.getItem(STORAGE_KEY_COUNT)) || 0;
 let certificateList = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST)) || [];
+
+// Show saved count on page load
 document.getElementById("certCount").innerText = certCount;
 renderList();
-/* LOGO */
+
+
+/* ============================= */
+/* IMAGE UPLOAD SECTION */
+/* ============================= */
+
 logoUpload.onchange = e => {
   const r = new FileReader();
-  r.onload = () => { companyLogo.src = r.result; companyLogo.style.display="block"; };
+  r.onload = () => { 
+    companyLogo.src = r.result; 
+    companyLogo.style.display="block"; 
+  };
   r.readAsDataURL(e.target.files[0]);
 };
 
-/* SIGNATURE */
 signatureUpload.onchange = e => {
   const r = new FileReader();
-  r.onload = () => { signatureImage.src = r.result; signatureImage.style.display="block"; };
+  r.onload = () => { 
+    signatureImage.src = r.result; 
+    signatureImage.style.display="block"; 
+  };
   r.readAsDataURL(e.target.files[0]);
 };
 
-/* PHOTO */
 photoUpload.onchange = e => {
   const r = new FileReader();
-  r.onload = () => { candidatePhoto.src = r.result; candidatePhoto.style.display="block"; };
+  r.onload = () => { 
+    candidatePhoto.src = r.result; 
+    candidatePhoto.style.display="block"; 
+  };
   r.readAsDataURL(e.target.files[0]);
 };
+
+
+/* ============================= */
+/* GENERATE CERTIFICATE */
+/* ============================= */
 
 function generateCertificate() {
 
@@ -282,29 +300,40 @@ function generateCertificate() {
   certificate.style.display = "block";
   downloadBtn.style.display = "inline-block";
 
+  // Increase counter
   certCount++;
-  localStorage.setItem("certCount", certCount);
-  document.getElementById("certCount").innerText = certCount;
 
- const newData = {
-  sheetName: "HAZMAT",   // 🔥 CHANGE THIS PER HTML FILE
-  certNo: certNo.value,
-  name: candidateName.value,
-  ppNo: ppNo.value,
-  conductedDate: conductedDate.value,
-  conductedAt: conductedAt.value,
-  issueDate: outIssueDate.innerText
-};
+  // Create data object
+  const newData = {
+    sheetName: "ESE",  // Change per page if needed
+    certNo: certNo.value,
+    name: candidateName.value,
+    ppNo: ppNo.value,
+    conductedDate: conductedDate.value,
+    conductedAt: conductedAt.value,
+    issueDate: outIssueDate.innerText
+  };
 
+  // Add to list
   certificateList.push(newData);
-  localStorage.setItem("certificateList", JSON.stringify(certificateList));
+
+  // Save to localStorage
+  localStorage.setItem(STORAGE_KEY_COUNT, certCount);
+  localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
+
+  // Update UI
+  document.getElementById("certCount").innerText = certCount;
   renderList();
 
-  // ✅ Send data to Google Sheet
+  // Send to Google Sheet
   saveToGoogleSheet(newData);
 }
 
-/* GOOGLE SHEET SAVE FUNCTION */
+
+/* ============================= */
+/* SAVE TO GOOGLE SHEET */
+/* ============================= */
+
 function saveToGoogleSheet(data) {
   fetch(SHEET_URL, {
     method: "POST",
@@ -314,19 +343,19 @@ function saveToGoogleSheet(data) {
     },
     body: JSON.stringify(data)
   })
-  .then(() => {
-    console.log("Saved to Google Sheet");
-  })
-  .catch(error => {
-    console.error("Error:", error);
-  });
+  .then(() => console.log("Saved to Google Sheet"))
+  .catch(error => console.error("Error:", error));
 }
 
-/* rest of your functions remain SAME */
+
+/* ============================= */
+/* RENDER CERTIFICATE LIST */
+/* ============================= */
 
 function renderList() {
   certListBody.innerHTML = "";
-  certificateList.forEach((c,i)=>{
+
+  certificateList.forEach((c, i) => {
     certListBody.innerHTML += `
       <tr>
         <td><input type="checkbox" class="rowCheck"></td>
@@ -337,29 +366,48 @@ function renderList() {
         <td>${c.conductedDate}</td>
         <td>${c.conductedAt}</td>
         <td>${c.issueDate}</td>
-        <td><button onclick="deleteOne(${i})" style="background:red;color:white;">X</button></td>
+        <td>
+          <button onclick="deleteOne(${i})" 
+          style="background:red;color:white;border:none;padding:5px 8px;">
+          X
+          </button>
+        </td>
       </tr>`;
   });
 }
 
+
+/* ============================= */
+/* DELETE FUNCTIONS */
+/* ============================= */
+
 function deleteOne(i){
   certificateList.splice(i,1);
-  localStorage.setItem("certificateList", JSON.stringify(certificateList));
+  localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
   renderList();
 }
 
 function deleteSelected(){
-  const checks=document.querySelectorAll(".rowCheck");
-  certificateList=certificateList.filter((_,i)=>!checks[i].checked);
-  localStorage.setItem("certificateList", JSON.stringify(certificateList));
+  const checks = document.querySelectorAll(".rowCheck");
+
+  certificateList = certificateList.filter((_,i)=>!checks[i].checked);
+
+  localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
   renderList();
 }
 
+
+/* ============================= */
+/* EXPORT TO CSV */
+/* ============================= */
+
 function exportToCSV(){
   let csv="Certificate No,Candidate Name,PP No,Conducted Date,Location,Issue Date\n";
+
   certificateList.forEach(c=>{
     csv+=`"${c.certNo}","${c.name}","${c.ppNo}","${c.conductedDate}","${c.conductedAt}","${c.issueDate}"\n`;
   });
+
   const blob=new Blob([csv],{type:"text/csv"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
@@ -367,22 +415,50 @@ function exportToCSV(){
   a.click();
 }
 
+
+/* ============================= */
+/* TOGGLE LIST */
+/* ============================= */
+
 function toggleList(){
-  listSection.style.display=listSection.style.display==="none"?"block":"none";
+  listSection.style.display =
+    listSection.style.display==="none"?"block":"none";
 }
 
+
+/* ============================= */
+/* DOWNLOAD PDF */
+/* ============================= */
+
 function downloadPDF(){
+
   entryForm.style.display="none";
+
   setTimeout(()=>{
     html2pdf().from(certificate).set({
       filename: candidateName.value+"_Certificate.pdf",
       html2canvas:{scale:2},
       jsPDF:{format:"a4"}
-    }).save().then(()=>entryForm.style.display="block");
+    }).save().then(()=>{
+      entryForm.style.display="block";
+    });
+
   },800);
 }
 
-</script>
 
+/* ============================= */
+/* RESET COUNTER */
+/* ============================= */
+
+function resetCounter(){
+  if(confirm("Are you sure you want to reset certificate count?")){
+    certCount = 0;
+    localStorage.setItem(STORAGE_KEY_COUNT, certCount);
+    document.getElementById("certCount").innerText = certCount;
+  }
+}
+
+</script>
 </body>
 </html> 
