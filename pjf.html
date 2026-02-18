@@ -238,9 +238,12 @@ body {
 
 <script>
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxwAMCSa2CDZyiTQb34Ibk9Aw1pvpY4QPRCwfHZiOdkr7seXdcCGozOeev2-j3SmF66wA/exec";let certCount = Number(localStorage.getItem("certCount")) || 0;
-let certificateList = JSON.parse(localStorage.getItem("certificateList")) || [];
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxwAMCSa2CDZyiTQb34Ibk9Aw1pvpY4QPRCwfHZiOdkr7seXdcCGozOeev2-j3SmF66wA/exec";
 
+const STORAGE_KEY_COUNT = "certCount_PJF";
+const STORAGE_KEY_LIST = "certificateList_PJF";
+let certCount = Number(localStorage.getItem(STORAGE_KEY_COUNT)) || 0;
+let certificateList = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST)) || [];
 document.getElementById("certCount").innerText = certCount;
 renderList();
 
