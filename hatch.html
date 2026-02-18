@@ -267,7 +267,6 @@ photoUpload.onchange = e => {
   r.onload = () => { candidatePhoto.src = r.result; candidatePhoto.style.display="block"; };
   r.readAsDataURL(e.target.files[0]);
 };
-
 function generateCertificate() {
 
   outCertNo.innerText = certNo.value;
@@ -280,25 +279,28 @@ function generateCertificate() {
   certificate.style.display = "block";
   downloadBtn.style.display = "inline-block";
 
+  // ✅ Increase Count
   certCount++;
-  localStorage.setItem("certCount", certCount);
+  localStorage.setItem(STORAGE_KEY_COUNT, certCount);
   document.getElementById("certCount").innerText = certCount;
 
- const newData = {
-  sheetName: "HATCH COVER",   // 🔥 CHANGE THIS PER HTML FILE
-  certNo: certNo.value,
-  name: candidateName.value,
-  ppNo: ppNo.value,
-  conductedDate: conductedDate.value,
-  conductedAt: conductedAt.value,
-  issueDate: outIssueDate.innerText
-};
+  const newData = {
+    sheetName: "HATCH COVER",
+    certNo: certNo.value,
+    name: candidateName.value,
+    ppNo: ppNo.value,
+    conductedDate: conductedDate.value,
+    conductedAt: conductedAt.value,
+    issueDate: outIssueDate.innerText
+  };
 
   certificateList.push(newData);
-  localStorage.setItem("certificateList", JSON.stringify(certificateList));
+
+  // ✅ Save list correctly
+  localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(certificateList));
+
   renderList();
 
-  // ✅ Send data to Google Sheet
   saveToGoogleSheet(newData);
 }
 
