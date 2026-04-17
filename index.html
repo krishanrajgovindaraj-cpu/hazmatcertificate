@@ -1,69 +1,152 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ozellar Login</title>
+  <title>Ozellar Portal Login</title>
 
   <style>
     body {
-      font-family: Calibri;
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
-      background: linear-gradient(#f0f1f1, #003366);
+      overflow: hidden;
       color: white;
     }
 
+    /* VIDEO BACKGROUND */
+    .bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+    }
+
+    /* DARK OVERLAY */
+    body::after {
+      content: "";
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: -1;
+    }
+
+    /* LOGIN BOX */
     .login-box {
-      background: rgba(255,255,255,0.1);
-      padding: 30px;
-      border-radius: 10px;
-      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.55);
+      padding: 40px 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(12px);
       text-align: center;
+      box-shadow: 0 0 25px rgba(0,0,0,0.7);
+      width: 320px;
+    }
+
+    /* LOGO */
+    .logo {
+      width: 80px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 10px orange);
+    }
+
+    h2 {
+      margin: 5px 0;
+      color: orange;
+      letter-spacing: 1px;
+    }
+
+    h4 {
+      margin-bottom: 20px;
+      font-weight: normal;
+      color: #ccc;
+      font-size: 14px;
     }
 
     input {
       display: block;
-      width: 250px;
-      padding: 10px;
-      margin: 10px auto;
-      border-radius: 5px;
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 8px;
       border: none;
+      outline: none;
+      font-size: 14px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    input::placeholder {
+      color: #ccc;
+    }
+
+    input:focus {
+      box-shadow: 0 0 8px orange;
     }
 
     button {
-      padding: 10px 20px;
-      background: orange;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, orange, #ff6600);
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       transition: 0.3s;
+      font-weight: bold;
+      color: white;
+      margin-top: 10px;
     }
 
     button:hover {
+      transform: scale(1.05);
       background: white;
       color: black;
     }
 
     .error {
-      color: red;
+      color: #ff4d4d;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    .footer {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #aaa;
     }
   </style>
 </head>
 
 <body>
 
-<div class="login-box">
-  <h2>Ozellar Login</h2>
+  <!-- BACKGROUND VIDEO -->
+  <video autoplay muted loop class="bg-video">
+    <source src="ship1.mp4" type="video/mp4">
+  </video>
 
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
+  <div class="login-box">
 
-  <button onclick="login()">Login</button>
+    <!-- LOGO -->
+    <img src="logo.png" class="logo" alt="Ozellar Logo">
 
-  <p id="error" class="error"></p>
-</div>
+    <h2>Ozellar</h2>
+    <h4>Certificate Portal Login</h4>
+
+    <input type="text" id="username" placeholder="Enter Username">
+    <input type="password" id="password" placeholder="Enter Password">
+
+    <button onclick="login()">Login</button>
+
+    <p id="error" class="error"></p>
+
+    <div class="footer">
+      © 2026 Ozellar Training
+    </div>
+  </div>
 
 <script>
   function login() {
