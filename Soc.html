@@ -348,7 +348,7 @@ function generateCertificate() {
 /* ============================= */
 
 function saveToGoogleSheet(data) {
-  fetch(SHEET_URL, {
+  fetch("https://script.google.com/macros/s/AKfycbz9tz1NlC518Uu2F_4JPdFW_uIMTD_5tldHfC51fZZVRk4iLRxipZO9TvB21VbbEss3Cw/exec", {
     method: "POST",
     mode: "no-cors",
     headers: {
