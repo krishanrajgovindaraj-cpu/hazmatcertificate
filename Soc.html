@@ -329,7 +329,7 @@ function generateCertificate() {
     conductedAt: conductedAt.value,
     issueDate: outIssueDate.innerText
   };
-
+  console.log(newData.sheetName);
   certificateList.push(newData);
 
   localStorage.setItem(STORAGE_KEY_COUNT, certCount);
